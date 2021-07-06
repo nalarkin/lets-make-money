@@ -56,7 +56,6 @@ class DatabaseService with ChangeNotifier {
     }
   }
 
-  
 
   // Future createMessageInDatabase(MessageCard msgCardToAdd) async {
   //   try {

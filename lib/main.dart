@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:lets_talk_money/screens/home.dart';
 import 'package:lets_talk_money/utils/widgets.dart';
 
 import 'package:provider/provider.dart';
@@ -55,7 +56,6 @@ class _AppToInitializeFirebaseState extends State<AppToInitializeFirebase> {
   }
 }
 
-
 // class MyApp extends StatelessWidget {
 //   @override
 //   Widget build(BuildContext context) {
@@ -105,35 +105,26 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        StreamProvider<User?>.value(
-          value: bloc.memberStream,
-          initialData: Member(),
-        ),
-      ],
-      child: MaterialApp(
-          title: 'MemoClub',
-          theme: AppTheme.appThemeData,
-          home: hasData ? Home() : Welcome(),
+    return
+        // MultiProvider(
+        //   providers: [
+        //     // StreamProvider<User? >.value(
+        //     //   value: bloc.memberStream,
+        //     //   initialData: Member(),
+        //     // ),
+        //   ],
+        //   child:
+        MaterialApp(
+            title: 'Nathan',
+            theme: ThemeData(primarySwatch: Colors.blue),
+            home: Home(),
 
-          // To navigate to another page enter type the command:
-          // Navigator.pushNamed(context, <ClassWithRouteName>.routeName);
-          // example: Navigator.pushNamed(context, Register.routeName);
-          routes: <String, WidgetBuilder>{
-            Home.routeName: (context) => Home(),
-            SignIn.routeName: (context) => SignIn(),
-            Register.routeName: (context) => Register(),
-            Profile.routeName: (context) => Profile(),
-            SettingsPage.routeName: (context) => SettingsPage(),
-            Welcome.routeName: (context) => Welcome(),
-            ResetScreen.routeName: (context) => ResetScreen(),
-            HealthRoom.routeName: (context) => HealthRoom(),
-            GamesRoom.routeName: (context) => GamesRoom(),
-            BusinessRoom.routeName: (context) => BusinessRoom(),
-            StudyRoom.routeName: (context) => StudyRoom(),
-            ResetUsernameScreen.routeName: (context) => ResetUsernameScreen(),
-          }),
-    );
+            // To navigate to another page enter type the command:
+            // Navigator.pushNamed(context, <ClassWithRouteName>.routeName);
+            // example: Navigator.pushNamed(context, Register.routeName);
+            routes: <String, WidgetBuilder>{
+          Home.routeName: (context) => Home(),
+        });
+    // );
   }
 }
