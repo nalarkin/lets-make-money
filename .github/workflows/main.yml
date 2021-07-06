@@ -52,8 +52,6 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1.5.2
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          token: 1b097de3-6aba-49d9-af70-99af44ca1450
           file: coverage/lcov.info   
-      - name: Last test
-        run: echo HERE End of tests
 
