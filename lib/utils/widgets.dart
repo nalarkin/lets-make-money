@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lets_talk_money/styles/colors.dart';
 
 class Header extends StatelessWidget {
   const Header(this.heading);
@@ -34,7 +35,7 @@ class IconAndDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.all(8.0), 
+        padding: const EdgeInsets.all(8.0),
         child: Row(
           children: [
             Icon(icon),
@@ -48,16 +49,48 @@ class IconAndDetail extends StatelessWidget {
       );
 }
 
+// class StyledButton extends StatelessWidget {
+//   const StyledButton({required this.child, required this.onPressed});
+//   final Widget child;
+//   final void Function() onPressed;
+
+//   @override
+//   Widget build(BuildContext context) => OutlinedButton(
+//         style: OutlinedButton.styleFrom(
+//             side: const BorderSide(color: Colors.deepPurple)),
+//         onPressed: onPressed,
+//         child: child,
+//       );
+// }
+
+PreferredSizeWidget myAppbar(String appBarTitle) {
+  return AppBar(
+    // backgroundColor: kPrimaryColor,
+    title: Text(
+      appBarTitle,
+      // style: Theme.of(context)
+      //     .textTheme
+      //     .headline5
+      //     ?.copyWith(color: kOnPrimaryColor),
+    ),
+  );
+}
+
 class StyledButton extends StatelessWidget {
-  const StyledButton({required this.child, required this.onPressed});
-  final Widget child;
+  const StyledButton({required this.text, required this.onPressed});
+  final String text;
   final void Function() onPressed;
 
   @override
-  Widget build(BuildContext context) => OutlinedButton(
-        style: OutlinedButton.styleFrom(
-            side: const BorderSide(color: Colors.deepPurple)),
+  Widget build(BuildContext context) => MaterialButton(
+        // elevation: buttonThemeElevation,
+        shape: RoundedRectangleBorder(
+            // borderRadius: BorderRadius.circular(buttonBorderRadius),
+            ),
+        // child: Text(text),
+        child: Text(text, style: Theme.of(context).textTheme.button),
+        // ?.copyWith(color: kOnButtonColor)),
+        color: kButtonColor,
         onPressed: onPressed,
-        child: child,
       );
 }

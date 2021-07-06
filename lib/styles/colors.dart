@@ -44,7 +44,6 @@ const kTextColor = Color(0xFF000000);
 const Color kAccentColor = Color(0xFF626B8B);
 const Color kCardColor = Color(0xFF626B8B);
 
-
 // const Color kPrimaryColor = Color(0xFF333959);
 
 // const Color kPrimaryColorLight = Color(0xFF5E6386);
@@ -56,7 +55,7 @@ const Color kCardColor = Color(0xFF626B8B);
 // const Color kMessageBorderColor = Color(0xFF091430);
 // const Color kCardColor = Color(0xFFC4C9D6);
 
-// const Color kButtonColor = kPrimaryColorLight;
+const Color kButtonColor = kAccentColor;
 // const Color kOnButtonColor = Color(0xFFFFFFFF);
 // const Color kFormColor = Color(0xFFC4C9D6);
 
