@@ -1,67 +1,139 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:lets_talk_money/styles/theme.dart';
 import 'package:lets_talk_money/utils/widgets.dart';
 
+import 'package:provider/provider.dart';
+
+import 'models/Member.dart';
+
 void main() {
-  runApp(MyApp());
+  // This needs to be called before any Firebase services can be used
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(AppToInitializeFirebase());
 }
 
-class MyApp extends StatelessWidget {
+/// We are using a StatefulWidget such that we only create the [Future] once,
+/// no matter how many times our widget rebuild.
+/// If we used a [StatelessWidget], in the event where [AppToInitializeFirebase] is rebuilt, that
+/// would re-initialize FlutterFire and make our application re-enter loading state,
+/// which is undesired.
+class AppToInitializeFirebase extends StatefulWidget {
+  // Create the initialization Future outside of `build`:
+  @override
+  _AppToInitializeFirebaseState createState() =>
+      _AppToInitializeFirebaseState();
+}
+
+class _AppToInitializeFirebaseState extends State<AppToInitializeFirebase> {
+  /// The future is part of the state of our widget. We should not call `initializeApp`
+  /// directly inside [build].
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme:
-          // ThemeData.from(colorScheme: appColorScheme, textTheme: appTextTheme),
-          // ThemeData.from(colorScheme: ColorScheme.fromSwatch( Colors.blueGrey)),
-          ThemeData(primarySwatch: Colors.blueGrey),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+    return FutureBuilder(
+      // Initialize FlutterFire:
+      future: _initialization,
+      builder: (context, snapshot) {
+        // Check for errors
+        if (snapshot.hasError) {
+          // return SomethingWentWrong();
+          return Text(
+              "Error ocurred in main.dart when calling Firebase.initializeApp()");
+        }
+
+        // Once complete, show your application
+        if (snapshot.connectionState == ConnectionState.done) {
+          return MyMaterialApp();
+        }
+
+        // Otherwise, show something whilst waiting for initialization to complete
+        return LoadingCircle();
+      },
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
 
-  final String title;
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return FutureBuilder(
+//         future: Provider.of<AuthService>(context, listen: false).firstLogin(),
+//         builder: (context, AsyncSnapshot<User?> snapshot) {
+//           if (snapshot.connectionState == ConnectionState.done) {
+//             if (snapshot.error != null) {
+//               print("error");
+//               return Text(snapshot.error.toString());
+//             }
+//             print("main.dart: snaphshot.data=${snapshot.data}");
+//             return MyMaterialApp(snapshot.data, snapshot.hasData);
+//           } else {
+//             return LoadingCircle();
+//           }
+//         });
+//   }
+// }
+
+class MyMaterialApp extends StatefulWidget {
+  // final User? currUser;
+  // final bool hasData;
+  // MyMaterialApp(this.currUser, this.hasData);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  // _MyMaterialAppState createState() => _MyMaterialAppState(currUser, hasData);
+  _MyMaterialAppState createState() => _MyMaterialAppState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _MyMaterialAppState extends State<MyMaterialApp> {
+  // final User? currUser;
+  // final bool hasData;
+  // MemberBloc bloc = MemberBloc();
+  // _MyMaterialAppState(this.currUser, this.hasData);
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  // @override
+  // void dispose() {
+  //   bloc.dispose();
+  //   super.dispose();
+  // }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: myAppbar("MoneyChat"),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            StyledButton(text: "text", onPressed: () => null),
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+    return MultiProvider(
+      providers: [
+        StreamProvider<User?>.value(
+          value: bloc.memberStream,
+          initialData: Member(),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
+      ],
+      child: MaterialApp(
+          title: 'MemoClub',
+          theme: AppTheme.appThemeData,
+          home: hasData ? Home() : Welcome(),
+
+          // To navigate to another page enter type the command:
+          // Navigator.pushNamed(context, <ClassWithRouteName>.routeName);
+          // example: Navigator.pushNamed(context, Register.routeName);
+          routes: <String, WidgetBuilder>{
+            Home.routeName: (context) => Home(),
+            SignIn.routeName: (context) => SignIn(),
+            Register.routeName: (context) => Register(),
+            Profile.routeName: (context) => Profile(),
+            SettingsPage.routeName: (context) => SettingsPage(),
+            Welcome.routeName: (context) => Welcome(),
+            ResetScreen.routeName: (context) => ResetScreen(),
+            HealthRoom.routeName: (context) => HealthRoom(),
+            GamesRoom.routeName: (context) => GamesRoom(),
+            BusinessRoom.routeName: (context) => BusinessRoom(),
+            StudyRoom.routeName: (context) => StudyRoom(),
+            ResetUsernameScreen.routeName: (context) => ResetUsernameScreen(),
+          }),
     );
   }
 }

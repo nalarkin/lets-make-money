@@ -49,19 +49,20 @@ class IconAndDetail extends StatelessWidget {
       );
 }
 
-// class StyledButton extends StatelessWidget {
-//   const StyledButton({required this.child, required this.onPressed});
-//   final Widget child;
-//   final void Function() onPressed;
+class LoadingCircle extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        child: CircularProgressIndicator(
+          backgroundColor: Theme.of(context).accentColor,
+        ),
+        alignment: Alignment(0.0, 0.0),
+      ),
+    );
+  }
+}
 
-//   @override
-//   Widget build(BuildContext context) => OutlinedButton(
-//         style: OutlinedButton.styleFrom(
-//             side: const BorderSide(color: Colors.deepPurple)),
-//         onPressed: onPressed,
-//         child: child,
-//       );
-// }
 
 PreferredSizeWidget myAppbar(String appBarTitle) {
   return AppBar(
