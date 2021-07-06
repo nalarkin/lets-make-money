@@ -47,7 +47,13 @@ jobs:
         
       - name: Install dependencies 
         run: flutter pub get
-        
+      - name: Test app
+        run: flutter test --coverage
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1.5.2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: coverage/lcov.info   
       - name: Last test
         run: echo HERE End of tests
 
