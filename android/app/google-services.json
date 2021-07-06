@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "914544076677",
+    "project_id": "nlarkin-lets-make-money",
+    "storage_bucket": "nlarkin-lets-make-money.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:914544076677:android:16aaeb0b681bd8b13c46ec",
+        "android_client_info": {
+          "package_name": "nlarkin.lets_talk_money"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "914544076677-cev12o50im52leqic1nniskg4f9n6gnb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "nlarkin.lets_talk_money",
+            "certificate_hash": "f86f924ca00dbe64dd583bc347b5e5f367ec21b2"
+          }
+        },
+        {
+          "client_id": "914544076677-8rp02gjhjeirjl3ksqk8qu94ng07or7i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCERpgGr6Psxf7EN_92MKVmSYy_391z_iA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "914544076677-8rp02gjhjeirjl3ksqk8qu94ng07or7i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

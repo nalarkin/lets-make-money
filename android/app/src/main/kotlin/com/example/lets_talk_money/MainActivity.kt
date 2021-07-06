@@ -1,4 +1,4 @@
-package com.example.lets_talk_money
+package nlarkin.lets_talk_money
 
 import io.flutter.embedding.android.FlutterActivity
 
