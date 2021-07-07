@@ -131,10 +131,13 @@ class ConvoListItem extends StatelessWidget {
   }
 
   String getGroupChatId() {
-    if (user?.uid.hashCode <= peer.id.hashCode) {
-      return user?.uid + '_' + peer.id;
-    } else {
-      return peer.uid + '_' + user.uid;
+    if (user != null) {
+      if (user!.uid.hashCode <= peer.id.hashCode) {
+        return user!.uid + '_' + peer.id;
+      } else {
+        return peer.id + '_' + user!.uid;
+      }
     }
+    return "";
   }
 }
