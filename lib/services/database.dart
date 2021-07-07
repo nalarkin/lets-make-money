@@ -56,6 +56,16 @@ class DatabaseService {
     }
   }
 
+
+  List<MessageCard> convertToMessageList(
+      QuerySnapshot<Map<String, dynamic>> snapshot) {
+    List<MessageCard> _healthMessageList = [];
+    snapshot.docs.forEach((element) {
+      _healthMessageList.add(MessageCard.fromMap(element.data()));
+    });
+    return _healthMessageList;
+  }
+  
   // Stream<List<User>> streamUsers() {
   //   return _firestoreInstance.collection(USERS_COLLECTION)
   //   .snapshots().map((event) => null)
