@@ -97,18 +97,32 @@ class DatabaseService with ChangeNotifier {
             .toList());
   }
 
-  Stream<List<Member>> getUsersByList(List<String> userIds) {
-    final List<Stream<Member>> streams = [];
-    for (String id in userIds) {
-      streams.add(_firestoreInstance
-          .collection('users')
-          .doc(id)
-          .snapshots()
-          .map((DocumentSnapshot<Map<String, dynamic>> snap) =>
-              Member.fromMap(snap.data())));
-    }
-    return StreamZip<Member>(streams).asBroadcastStream();
+  Stream<List<Member>> get streamMembers => _firestoreInstance.collection(USERS_COLLECTION).snapshots().map(convertUsersToMembers);
+    
   }
+
+  List<Member> convertUsersToMembers(
+      QuerySnapshot<Map<String, dynamic>> snapshot) {
+    List<Member> _memberList = [];
+    snapshot.docs.forEach((element) {
+      _memberList.add(Member.fromMap(element.data()));
+    });
+    return _memberList;
+  }
+
+
+  // Stream<List<Member>> getUsersByList(List<String> userIds) {
+  //   final List<Stream<Member>> streams = [];
+  //   for (String id in userIds) {
+  //     streams.add(_firestoreInstance
+  //         .collection('users')
+  //         .doc(id)
+  //         .snapshots()
+  //         .map((DocumentSnapshot<Map<String, dynamic>> snap) =>
+  //             Member.fromMap(snap.data())));
+  //   }
+  //   return StreamZip<Member>(streams).asBroadcastStream();
+  // }
 
   // Future createMessageInDatabase(MessageCard msgCardToAdd) async {
   //   try {

@@ -32,22 +32,20 @@ class ConversationDetailsProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<List<Member>>.value(
-        value: DatabaseService().getUsersByList(
-            getUserIds(Provider.of<List<Message>>(context))),
-        initialData: [],
-        child: HomeBuilder());
+    return Container();
+    // return StreamProvider<List<Member>>.value(
+    //     value: DatabaseService()
+    //         .getUsersByList(getUserIds(Provider.of<List<Message>>(context))),
+    //     initialData: [],
+    //     child: HomeBuilder());
   }
-
 
   // this determines which way the messages orient
   List<String> getUserIds(List<Message> _convos) {
     final List<String> users = <String>[];
     if (_convos != null) {
       for (Message c in _convos) {
-        c.idFrom != (user?.uid ?? '')
-            ? users.add(c.idFrom)
-            : users.add(c.idTo);
+        c.idFrom != (user?.uid ?? '') ? users.add(c.idFrom) : users.add(c.idTo);
       }
     }
     return users;

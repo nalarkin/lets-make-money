@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:lets_talk_money/models/member.dart';
 import 'package:lets_talk_money/screens/debug.dart';
 import 'package:lets_talk_money/screens/home.dart';
 import 'package:lets_talk_money/screens/welcome.dart';
 import 'package:lets_talk_money/services/auth.dart';
+import 'package:lets_talk_money/services/database.dart';
 import 'package:lets_talk_money/utils/widgets.dart';
 
 import 'package:provider/provider.dart';
@@ -100,6 +102,8 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
             value: _auth.currentUser,
             initialData: null,
           ),
+          StreamProvider<List<Member>>.value(
+        value: DatabaseService().streamMembers, initialData: [],)
         ],
         child: MaterialApp(
             title: 'Nathan',
