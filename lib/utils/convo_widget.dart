@@ -1,29 +1,25 @@
-import 'package:chat_app/screens/messaging/newConversationScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:chat_app/models/user.dart';
 import 'package:intl/intl.dart';
+import 'package:lets_talk_money/models/member.dart';
+import 'package:lets_talk_money/screens/new_conversation.dart';
 
 class ConvoListItem extends StatelessWidget {
   ConvoListItem(
-      {Key key,
-      @required this.user,
-      @required this.peer,
-      @required this.lastMessage})
-      : super(key: key);
+      {required this.user, required this.peer, required this.lastMessage});
 
-  final FirebaseUser user;
-  final User peer;
-  Map<dynamic, dynamic> lastMessage;
+  User? user;
+  Member peer = Member();
+  Map<dynamic, dynamic> lastMessage = {};
 
-  BuildContext context;
-  String groupId;
-  bool read;
+  late BuildContext context;
+  String groupId = '';
+  bool read = false;
 
   @override
   Widget build(BuildContext context) {
-    if (lastMessage['idFrom'] == user.uid) {
+    if (lastMessage['idFrom'] == (user?.uid ?? '')) {
       read = true;
     } else {
       read = lastMessage['read'] == null ? true : lastMessage['read'];
@@ -46,8 +42,10 @@ class ConvoListItem extends StatelessWidget {
       behavior: HitTestBehavior.translucent,
       onTap: () {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (BuildContext context) => NewConversationScreen(
-                uid: user.uid, contact: peer, convoID: getGroupChatId())));
+            builder: (BuildContext context) => NewConversation(
+                uid: user?.uid ?? '',
+                contact: peer,
+                convoID: getGroupChatId())));
       },
       child: Padding(
         padding: const EdgeInsets.only(bottom: 10.0),
@@ -58,7 +56,7 @@ class ConvoListItem extends StatelessWidget {
               children: <Widget>[
                 Container(
                     width: MediaQuery.of(context).size.width * 0.85,
-                    child: buildConvoDetails(peer.name, context)),
+                    child: buildConvoDetails(peer.username, context)),
               ],
             ),
           ),
@@ -133,8 +131,8 @@ class ConvoListItem extends StatelessWidget {
   }
 
   String getGroupChatId() {
-    if (user.uid.hashCode <= peer.uid.hashCode) {
-      return user.uid + '_' + peer.uid;
+    if (user?.uid.hashCode <= peer.id.hashCode) {
+      return user?.uid + '_' + peer.id;
     } else {
       return peer.uid + '_' + user.uid;
     }

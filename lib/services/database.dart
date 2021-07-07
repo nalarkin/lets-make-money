@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lets_talk_money/models/member.dart';
 import 'package:lets_talk_money/models/message.dart';
+import 'package:async/async.dart';
 
 class DatabaseService with ChangeNotifier {
   final _firestoreInstance = FirebaseFirestore.instance;

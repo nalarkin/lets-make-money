@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lets_talk_money/models/member.dart';
+import 'package:lets_talk_money/models/message.dart';
 import 'package:lets_talk_money/screens/home_builder.dart';
 import 'package:lets_talk_money/services/database.dart';
 import 'package:provider/provider.dart';
@@ -15,8 +16,9 @@ class ConversationProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<List<Convo>>.value(
-        value: DatabaseService().streamConversations(user.id),
+    return StreamProvider<List<Message>>.value(
+        value: DatabaseService().streamConversations(user?.uid ?? ''),
+        initialData: [],
         child: ConversationDetailsProvider(user: user));
   }
 }
@@ -32,14 +34,15 @@ class ConversationDetailsProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamProvider<List<Member>>.value(
         value: DatabaseService().getUsersByList(
-            getUserIds(Provider.of<List<Convo>>(context))),
+            getUserIds(Provider.of<List<Message>>(context))),
+        initialData: [],
         child: HomeBuilder());
   }
 
-  List<String> getUserIds(List<Convo> _convos) {
+  List<String> getUserIds(List<Message> _convos) {
     final List<String> users = <String>[];
     if (_convos != null) {
-      for (Convo c in _convos) {
+      for (Message c in _convos) {
         c.userIds[0] != (user?.uid ?? '')
             ? users.add(c.userIds[0])
             : users.add(c.userIds[1]);
