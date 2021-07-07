@@ -1,26 +1,42 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Message {
-  String author;
-  DateTime? date;
+  // String author;
+  String timestamp;
   String content;
-  String room;
+  String idFrom;
+  String idTo;
+  // String convoID;
+  bool read;
+
+// sendMessage(convoID, uid, contact.id, content,
+//           DateTime.now().millisecondsSinceEpoch.toString());
 
   Message({
-    this.author = '',
+    // this.convoID = '',
+    this.idFrom = '',
+    this.idTo = '',
     this.content = '',
-    this.room = '',
-    this.date,
+    this.timestamp = '',
+    this.read = false,
   });
 
-
+// 'lastMessage': <String, dynamic>{
+//         'idFrom': id,
+//         'idTo': pid,
+//         'timestamp': timestamp,
+//         'content': content,
+//         'read': false
+//       },
+//       'users': <String>[id, pid]
 
   factory Message.fromMap(Map<String, dynamic> userInfo) {
     Message res = new Message(
-      author: userInfo["author"],
-      date: (userInfo["date"] as Timestamp).toDate(),
+      idFrom: userInfo['idFrom'],
+      idTo: userInfo['idTo'],
+      read: userInfo['read'],
+      timestamp: userInfo["date"].toString(),
       content: userInfo["content"],
-      room: userInfo["room"],
     );
     print("Created $res");
     return res;
@@ -28,6 +44,6 @@ class Message {
 
   @override
   String toString() {
-    return "MessageCard($author, $content, $date)";
+    return "MessageCard($idFrom to $idTo, $content)";
   }
 }
