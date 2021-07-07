@@ -64,10 +64,10 @@ class LoadingCircle extends StatelessWidget {
   }
 }
 
-
 PreferredSizeWidget myAppbar(String appBarTitle) {
   return AppBar(
     // backgroundColor: kPrimaryColor,
+    centerTitle: true,
     title: Text(
       appBarTitle,
       // style: Theme.of(context)
@@ -96,7 +96,6 @@ class StyledButton extends StatelessWidget {
         onPressed: onPressed,
       );
 }
-
 
 class ExtractArgumentsScreen extends StatelessWidget {
   static const routeName = '/extractArguments';

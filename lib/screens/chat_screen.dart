@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lets_talk_money/models/member.dart';
 import 'package:lets_talk_money/models/message_card.dart';
 import 'package:lets_talk_money/services/database.dart';
 import 'package:lets_talk_money/styles/colors.dart';
@@ -12,18 +13,30 @@ import 'package:provider/provider.dart';
 class ChatScreen extends StatefulWidget {
   static const String routeName = '/chat_screen';
   // const ChatScreen({ Key? key }) : super(key: key);
-  ChatScreen({this.convoID = ''});
+  ChatScreen({this.convoID = '', this.currSender, this.currReceiver});
   String convoID;
+  // late Member? currRecipient;
+  // User? currUser;
+  // String currSender;
+  User? currSender;
+  Member? currReceiver;
+  // String currReceiver;
 
   @override
-  _ChatScreenState createState() => _ChatScreenState(convoID: convoID);
+  _ChatScreenState createState() => _ChatScreenState(
+      convoID: convoID, currSender: currSender, currReceiver: currReceiver);
 }
 
 class _ChatScreenState extends State<ChatScreen> {
   final myController = TextEditingController();
   // _ChatScreenState();
-  _ChatScreenState({required this.convoID});
+  _ChatScreenState(
+      {required this.convoID,
+      required this.currReceiver,
+      required this.currSender});
   String convoID;
+  User? currSender;
+  Member? currReceiver;
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -34,10 +47,15 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as ChatScreen;
+    print(
+        "ARGS ARE HERE: args convoID ${args.convoID} currSender: ${args.currSender} receiver: ${args.currReceiver}");
     this.convoID = args.convoID;
+    this.currSender = args.currSender;
+    this.currReceiver = args.currReceiver;
+
     print("CONVOID IS : $convoID");
     return Scaffold(
-      appBar: myAppbar("Games Room"),
+      appBar: myAppbar("${currReceiver?.username}"),
       body: Stack(children: <Widget>[
         Column(
           children: <Widget>[

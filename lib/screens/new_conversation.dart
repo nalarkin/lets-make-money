@@ -64,7 +64,10 @@ Widget buildItem(context, Member currMember, User? currUser) {
               print("CONVO Member $currMember currUser $currUser");
               print("generated CONVOID is $generatedConvoID");
               Navigator.pushNamed(context, ChatScreen.routeName,
-                  arguments: ChatScreen(convoID: generatedConvoID));
+                  arguments: ChatScreen(
+                      convoID: generatedConvoID,
+                      currReceiver: currMember,
+                      currSender: currUser));
             },
             title: Text(currMember.username,
                 style: Theme.of(context).textTheme.bodyText2?.copyWith(
