@@ -29,6 +29,18 @@ class MessageCard {
     return res;
   }
 
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> data = {
+      "content": content,
+      "idFrom": idFrom,
+      "idTo": idTo,
+      "read": read,
+      "timestamp": timestamp
+    };
+    print("converted MessageCard to map, data below \n $data");
+    return data;
+  }
+
   @override
   String toString() {
     return "MessageCard(from:$idFrom \n to:$idTo,\n content:$content \n read?:$read)";

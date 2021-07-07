@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:lets_talk_money/models/member.dart';
+import 'package:lets_talk_money/screens/chat_screen.dart';
 import 'package:lets_talk_money/screens/debug.dart';
 import 'package:lets_talk_money/screens/home.dart';
 import 'package:lets_talk_money/screens/new_conversation.dart';
@@ -124,6 +125,7 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
               Debug.routeName: (context) => Debug(),
               Welcome.routeName: (context) => Welcome(),
               NewConversation.routeName: (context) => NewConversation(),
+              ChatScreen.routeName: (context) => ChatScreen(),
             }));
   }
 }

@@ -1,9 +1,12 @@
 import 'package:bubble/bubble.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lets_talk_money/models/member.dart';
 import 'package:lets_talk_money/screens/build_input.dart';
+import 'package:lets_talk_money/screens/chat_screen.dart';
 import 'package:lets_talk_money/services/database.dart';
+import 'package:lets_talk_money/utils/helper.dart';
 import 'package:lets_talk_money/utils/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +17,7 @@ class NewConversation extends StatelessWidget {
   Widget build(BuildContext context) {
     DatabaseService _db = Provider.of<DatabaseService>(context);
     List<Member> currMembers = Provider.of<List<Member>>(context);
+    User? currUser = Provider.of<User?>(context);
 
     return Scaffold(
       appBar: myAppbar("User Directory"),
@@ -34,16 +38,14 @@ class NewConversation extends StatelessWidget {
               padding: EdgeInsets.all(10.0),
               itemCount: snapshot.data?.length,
               itemBuilder: (context, index) => buildItem(
-                    context,
-                    _messageList?[index] ?? Member(),
-                  ));
+                  context, _messageList?[index] ?? Member(), currUser));
         },
       ),
     );
   }
 }
 
-Widget buildItem(context, Member currMember) {
+Widget buildItem(context, Member currMember, User? currUser) {
   return Container(
       // width: MediaQuery.of(context).size.width * 0.6,
       // padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -56,7 +58,9 @@ Widget buildItem(context, Member currMember) {
             // tileColor: Colors.green,
             // tileColor: Theme.of(context).cardColor,
             leading: Icon(Icons.face),
-            onTap: () => null,
+            onTap: () => Navigator.pushNamed(context, ChatScreen.routeName,
+                arguments: HelperFunctions.getConvoID(
+                    currUser?.uid ?? '', currMember.id)),
             title: Text(currMember.username,
                 style: Theme.of(context).textTheme.bodyText2?.copyWith(
                       color: Colors.black,

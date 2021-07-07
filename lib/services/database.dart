@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:lets_talk_money/models/member.dart';
 import 'package:lets_talk_money/models/message.dart';
 import 'package:async/async.dart';
+import 'package:lets_talk_money/models/message_card.dart';
+import 'package:lets_talk_money/utils/helper.dart';
 
 class DatabaseService {
   final _firestoreInstance = FirebaseFirestore.instance;
@@ -24,10 +26,15 @@ class DatabaseService {
   // static const String STUDY_ROOM = 'studyRoom';
   // static const String HEALTH_ROOM = 'healthRoom';
   static const String MSG_COLLECTION = 'messages';
-  static const String MSG_AUTHOR_FIELD = 'author';
-  static const String MSG_CONTENT_FIELD = 'content';
-  static const String MSG_DATE_FIELD = 'date';
-  static const String MSG_ROOM_FIELD = 'room';
+
+  
+  static const String MSG_ID_FROM = 'idFrom';
+  static const String MSG_LAST_MESSAGE = 'lastMessage';
+  static const String MSG_USER_ARRAY = 'participants';
+  static const String MSG_CONTENT = 'content';
+  static const String MSG_ID_TO = 'idTo';
+  static const String MSG_TIMESTAMP = 'timestamp';
+  static const String MSG_READ = 'read';
   // static const List ALL_ROOMS = [
   //   GAMES_ROOM,
   //   BUSINESS_ROOM,
@@ -134,25 +141,45 @@ class DatabaseService {
   //   return StreamZip<Member>(streams).asBroadcastStream();
   // }
 
-  // Future createMessageInDatabase(MessageCard msgCardToAdd) async {
-  //   try {
-  //     // checks to make sure room collection exists
-  //     if (ALL_ROOMS.contains(msgCardToAdd.room)) {
-  //       _firestoreInstance
-  //           .collection(ROOM_COLLECTION)
-  //           .doc(msgCardToAdd.room)
-  //           .collection(MSG_COLLECTION)
-  //           .add({
-  //         MSG_AUTHOR_FIELD: msgCardToAdd.author,
-  //         MSG_CONTENT_FIELD: msgCardToAdd.content,
-  //         MSG_DATE_FIELD: msgCardToAdd.date,
-  //         MSG_ROOM_FIELD: msgCardToAdd.room,
-  //       });
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
+  Future createMessageInDatabase(MessageCard msgCardToAdd) async {
+    try {
+      // checks to make sure room collection exists
+      String convoID = HelperFunctions.getConvoID(msgCardToAdd.idFrom, msgCardToAdd.idTo);
+      Map<String, dynamic> messageInfo = msgCardToAdd.toMap();
+      await _firestoreInstance
+            .collection(MSG_COLLECTION)
+            .doc(convoID)
+            .collection(convoID)
+            .add(messageInfo);
+        //     .add({
+        //   MSG_CONTENT: msgCardToAdd.content,
+        //   MSG_ID_FROM: msgCardToAdd.idFrom,
+        //   MSG_ID_TO: msgCardToAdd.idTo,
+        //   MSG_READ: msgCardToAdd.read,
+        //   MSG_TIMESTAMP: msgCardToAdd.timestamp,
+        // });
+        print("adding message to firestore");
+        await _firestoreInstance
+            .collection(MSG_COLLECTION)
+            .doc(convoID)
+            .set({
+              MSG_LAST_MESSAGE: messageInfo,
+              MSG_USER_ARRAY: [msgCardToAdd.idFrom, msgCardToAdd.idTo],
+            });
+        print("updated last message to $msgCardToAdd");
+        //     .set({
+        //   MSG_CONTENT: msgCardToAdd.content,
+        //   MSG_ID_FROM: msgCardToAdd.idFrom,
+        //   MSG_ID_TO: msgCardToAdd.idTo,
+        //   MSG_READ: msgCardToAdd.read,
+        //   MSG_TIMESTAMP: msgCardToAdd.timestamp,
+
+        // });
+      // }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   // Future<List<MessageCard>> getAllHealthMessages() async {
   //   List<MessageCard> _messageList = [];

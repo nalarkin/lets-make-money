@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lets_talk_money/models/message_card.dart';
 import 'package:lets_talk_money/screens/new_conversation.dart';
 import 'package:lets_talk_money/services/auth.dart';
 import 'package:lets_talk_money/services/database.dart';
@@ -42,13 +44,30 @@ class Home extends StatelessWidget {
               onPressed: () async =>
                   DatabaseService().createUserInDatabase(currUser),
               child: Text("create user"),
-            )
+            ),
+            MaterialButton(
+              onPressed: () async => createDummyMessage(),
+              child: Text("Create Message"),
+            ),
           ],
         ),
       )),
     );
   }
 }
+
+Future createDummyMessage() async {
+  MessageCard msgCardToAdd = MessageCard(
+      content: "dummy content",
+      idFrom: "XE3kK3v8OYQNkA9R19nlZoh7toJ2",
+      idTo: "oYwXPIfUFjfDyABGIgXkzdzsYkr2",
+      read: false,
+      timestamp: Timestamp.now());
+  DatabaseService db = DatabaseService();
+  await db.createMessageInDatabase(msgCardToAdd);
+  print("message creation complete");
+}
+
 // class Home extends StatelessWidget {
 //   static const String routeName = "/home";
 //   const Home({Key? key}) : super(key: key);
