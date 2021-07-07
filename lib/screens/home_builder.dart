@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lets_talk_money/models/member.dart';
 import 'package:lets_talk_money/models/message.dart';
 import 'package:lets_talk_money/screens/new_message_provider.dart';
+import 'package:lets_talk_money/services/auth.dart';
 import 'package:provider/provider.dart';
 
 class HomeBuilder extends StatelessWidget {
@@ -18,7 +19,7 @@ class HomeBuilder extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             IconButton(
-                onPressed: Authentication.handleLogout,
+                onPressed: () => AuthService().signOut(),
                 icon: Icon(Icons.first_page, size: 30)),
             Text("${firebaseUser?.displayName}",
                 style: TextStyle(fontSize: 18)),

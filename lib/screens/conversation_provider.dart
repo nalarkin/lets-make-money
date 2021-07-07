@@ -39,13 +39,15 @@ class ConversationDetailsProvider extends StatelessWidget {
         child: HomeBuilder());
   }
 
+
+  // this determines which way the messages orient
   List<String> getUserIds(List<Message> _convos) {
     final List<String> users = <String>[];
     if (_convos != null) {
       for (Message c in _convos) {
-        c.userIds[0] != (user?.uid ?? '')
-            ? users.add(c.userIds[0])
-            : users.add(c.userIds[1]);
+        c.idFrom != (user?.uid ?? '')
+            ? users.add(c.idFrom)
+            : users.add(c.idTo);
       }
     }
     return users;
