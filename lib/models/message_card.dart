@@ -18,11 +18,12 @@ class MessageCard {
   });
 
   factory MessageCard.fromMap(Map<String, dynamic> msgInfo) {
+    print("creating message card from map");
     MessageCard res = new MessageCard(
       idFrom: msgInfo['idFrom'],
       idTo: msgInfo['idTo'],
       read: msgInfo['read'],
-      timestamp: (msgInfo["date"] as Timestamp),
+      timestamp: (msgInfo["timestamp"] as Timestamp),
       content: msgInfo["content"],
     );
 

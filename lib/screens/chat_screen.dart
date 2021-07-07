@@ -41,9 +41,10 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Stack(children: <Widget>[
         Column(
           children: <Widget>[
-            Flexible(
-              child: buildMessageList(),
-            ),
+            // Flexible(
+            // child: buildMessageList(),
+            buildMessageList(),
+            // ),
             // buildInput(context, myController),
           ],
         )
@@ -64,7 +65,8 @@ class _ChatScreenState extends State<ChatScreen> {
       builder:
           (BuildContext context, AsyncSnapshot<List<MessageCard>> snapshot) {
         if (snapshot.hasError) {
-          return Text('Something went wrong');
+          // print(snapshot.error);
+          return Text('Something went wrong. \n Error ${snapshot.error}');
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
