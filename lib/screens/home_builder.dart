@@ -1,14 +1,9 @@
-import 'package:chat_app/models/convo.dart';
-import 'package:chat_app/models/user.dart';
-import 'package:chat_app/screens/messaging/widgets/convoWidget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:chat_app/services/authentication.dart';
 import 'package:lets_talk_money/models/member.dart';
 import 'package:lets_talk_money/models/message.dart';
 import 'package:lets_talk_money/screens/new_message_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:chat_app/providers/newMessageProvider.dart';
 
 class HomeBuilder extends StatelessWidget {
   @override
@@ -45,7 +40,7 @@ class HomeBuilder extends StatelessWidget {
 
   Map<String, Member> getUserMap(List<Member> users) {
     final Map<String, Member> userMap = Map();
-    for (User u in users) {
+    for (Member u in users) {
       userMap[u.id] = u;
     }
     return userMap;
