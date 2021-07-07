@@ -5,7 +5,7 @@ import 'package:lets_talk_money/models/member.dart';
 import 'package:lets_talk_money/models/message.dart';
 import 'package:async/async.dart';
 
-class DatabaseService with ChangeNotifier {
+class DatabaseService {
   final _firestoreInstance = FirebaseFirestore.instance;
 
   DatabaseService();
@@ -84,7 +84,7 @@ class DatabaseService with ChangeNotifier {
   }
 
   //  this represents message collection (not subcollection!)
-  // lastMessage adn users array are visible to this 
+  // lastMessage adn users array are visible to this
   Stream<List<Message>> streamConversations(String uid) {
     return _firestoreInstance
         .collection('messages')
@@ -97,9 +97,10 @@ class DatabaseService with ChangeNotifier {
             .toList());
   }
 
-  Stream<List<Member>> get streamMembers => _firestoreInstance.collection(USERS_COLLECTION).snapshots().map(convertUsersToMembers);
-    
-  }
+  Stream<List<Member>> get streamMembers => _firestoreInstance
+      .collection(USERS_COLLECTION)
+      .snapshots()
+      .map(convertUsersToMembers);
 
   List<Member> convertUsersToMembers(
       QuerySnapshot<Map<String, dynamic>> snapshot) {
@@ -109,7 +110,6 @@ class DatabaseService with ChangeNotifier {
     });
     return _memberList;
   }
-
 
   // Stream<List<Member>> getUsersByList(List<String> userIds) {
   //   final List<Stream<Member>> streams = [];

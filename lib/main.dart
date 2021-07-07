@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:lets_talk_money/models/member.dart';
 import 'package:lets_talk_money/screens/debug.dart';
 import 'package:lets_talk_money/screens/home.dart';
+import 'package:lets_talk_money/screens/new_conversation.dart';
 import 'package:lets_talk_money/screens/welcome.dart';
 import 'package:lets_talk_money/services/auth.dart';
 import 'package:lets_talk_money/services/database.dart';
@@ -103,7 +104,12 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
             initialData: null,
           ),
           StreamProvider<List<Member>>.value(
-        value: DatabaseService().streamMembers, initialData: [],)
+            value: DatabaseService().streamMembers,
+            initialData: [],
+          ),
+          Provider<DatabaseService>(
+            create: (_) => DatabaseService(),
+          ),
         ],
         child: MaterialApp(
             title: 'Nathan',
@@ -117,6 +123,7 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
               Home.routeName: (context) => Home(),
               Debug.routeName: (context) => Debug(),
               Welcome.routeName: (context) => Welcome(),
+              NewConversation.routeName: (context) => NewConversation(),
             }));
   }
 }

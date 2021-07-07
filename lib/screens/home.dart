@@ -1,14 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lets_talk_money/screens/new_conversation.dart';
 import 'package:lets_talk_money/services/auth.dart';
 import 'package:lets_talk_money/services/database.dart';
 import 'package:lets_talk_money/utils/widgets.dart';
 import 'package:provider/provider.dart';
-
-
-
-
-
 
 class Home extends StatelessWidget {
   static const String routeName = "/home";
@@ -25,7 +21,8 @@ class Home extends StatelessWidget {
         actions: [
           IconButton(
               // onPressed: () => createNewConvo(context),
-              onPressed: () => null,
+              onPressed: () =>
+                  Navigator.pushNamed(context, NewConversation.routeName),
               icon: Icon(
                 Icons.add,
                 size: 30,
