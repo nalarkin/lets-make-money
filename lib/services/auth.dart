@@ -2,10 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lets_talk_money/services/database.dart';
 
 class AuthService {
   // Member currentMember = Member();
-  // DatabaseService _db = DatabaseService();
+  DatabaseService _db = DatabaseService();
   FirebaseAuth _auth = FirebaseAuth.instance;
   // User? user;
   // AuthService();
@@ -102,6 +103,7 @@ class AuthService {
       await currUser?.updateDisplayName("Guest");
       // await currUser?.reload();
       User? updatedUser = _auth.currentUser;
+      await _db.createUserInDatabase(updatedUser);
       print("signed in anonymously with user: $currUser");
       return updatedUser;
     } catch (e) {

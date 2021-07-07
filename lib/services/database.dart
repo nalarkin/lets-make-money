@@ -1,201 +1,185 @@
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:firebase_core/firebase_core.dart';
-// import 'package:flutter/material.dart';
-// import 'package:lets_talk_money/models/Member.dart';
-// import 'package:lets_talk_money/models/Message.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:lets_talk_money/models/member.dart';
 
-// class DatabaseService with ChangeNotifier {
-//   final _firestoreInstance = FirebaseFirestore.instance;
+class DatabaseService with ChangeNotifier {
+  final _firestoreInstance = FirebaseFirestore.instance;
 
-//   DatabaseService();
+  DatabaseService();
 
-//   static const String USERS_COLLECTION = "users";
-//   static const String USER_FIRSTNAME_FIELD = "firstName";
-//   static const String USER_LASTNAME_FIELD = "lastName";
-//   static const String USER_ID_FIELD = "id";
-//   static const String USER_EMAIL_FIELD = "email";
-//   static const String USER_DATE_REGISTERED_FIELD = "dateRegistered";
-//   static const String USER_ROLE_FIELD = "role";
-//   static const String USER_USERNAME_FIELD = "username";
+  static const String USERS_COLLECTION = "users";
+  static const String USER_FIRSTNAME_FIELD = "firstName";
+  static const String USER_LASTNAME_FIELD = "lastName";
+  static const String USER_ID_FIELD = "id";
+  static const String USER_EMAIL_FIELD = "email";
+  static const String USER_DATE_REGISTERED_FIELD = "dateRegistered";
+  static const String USER_USERNAME_FIELD = "username";
 
-//   static const String USER_SOCIAL_FIELD = "connectedSocials";
-//   static const String USER_FACEBOOK_FIELD = "facebook";
-//   static const String USER_GOOGLE_FIELD = "google";
+  // static const String ROOM_COLLECTION = 'allRooms';
+  // static const String GAMES_ROOM = 'gamesRoom';
+  // static const String BUSINESS_ROOM = 'businessRoom';
+  // static const String STUDY_ROOM = 'studyRoom';
+  // static const String HEALTH_ROOM = 'healthRoom';
+  // static const String MSG_COLLECTION = 'messages';
+  // static const String MSG_AUTHOR_FIELD = 'author';
+  // static const String MSG_CONTENT_FIELD = 'content';
+  // static const String MSG_DATE_FIELD = 'date';
+  // static const String MSG_ROOM_FIELD = 'room';
+  // static const List ALL_ROOMS = [
+  //   GAMES_ROOM,
+  //   BUSINESS_ROOM,
+  //   HEALTH_ROOM,
+  //   STUDY_ROOM
+  // ];
 
-//   static const String ROOM_COLLECTION = 'allRooms';
-//   static const String GAMES_ROOM = 'gamesRoom';
-//   static const String BUSINESS_ROOM = 'businessRoom';
-//   static const String STUDY_ROOM = 'studyRoom';
-//   static const String HEALTH_ROOM = 'healthRoom';
-//   static const String MSG_COLLECTION = 'messages';
-//   static const String MSG_AUTHOR_FIELD = 'author';
-//   static const String MSG_CONTENT_FIELD = 'content';
-//   static const String MSG_DATE_FIELD = 'date';
-//   static const String MSG_ROOM_FIELD = 'room';
-//   static const List ALL_ROOMS = [
-//     GAMES_ROOM,
-//     BUSINESS_ROOM,
-//     HEALTH_ROOM,
-//     STUDY_ROOM
-//   ];
+  Future createUserInDatabase(User? currUser) async {
+    print("inside database creation user is : $currUser");
+    if (currUser != null) {
+      _firestoreInstance
+          .collection(USERS_COLLECTION)
+          .doc(currUser.uid)
+          .set({
+            USER_EMAIL_FIELD: "",
+            USER_FIRSTNAME_FIELD: "",
+            USER_LASTNAME_FIELD: "",
+            USER_ID_FIELD: currUser.uid,
+            USER_DATE_REGISTERED_FIELD: Timestamp.now(),
+            USER_USERNAME_FIELD: "Guest",
+          })
+          .then((value) => print('Guest created in Firestore Database.'))
+          .catchError((error) => print('Failed to create user: $error'));
+    } else {
+      print('User was null, so could not complete createUserInDatabase()');
+    }
+  }
 
-//   // TODO: Add methods to create, store, and modify users and messages
+  // Stream<List<User>> streamUsers() {
+  //   return _firestoreInstance.collection(USERS_COLLECTION)
+  //   .snapshots().map((event) => null)
 
-//   Future createUserInDatabaseFromEmail(
-//       User? currUser,
-//       String email,
-//       String password,
-//       String firstName,
-//       String lastName,
-//       DateTime dateRegistered,
-//       String username,
-//       {String userRole = 'Customer'}) async {
-//     Map<String, String> connectedSocials = new Map<String, String>();
-//     connectedSocials[USER_FACEBOOK_FIELD] = "";
-//     connectedSocials[USER_GOOGLE_FIELD] = "";
+  //   => list.docs.map((DocumentSnapshot snap) => Member.fromMap(snap.data()))).toList();
+  // }
 
-//     if (currUser != null) {
-//       _firestoreInstance
-//           .collection(USERS_COLLECTION)
-//           .doc(currUser.uid)
-//           .set({
-//             USER_EMAIL_FIELD: email,
-//             USER_FIRSTNAME_FIELD: firstName,
-//             USER_LASTNAME_FIELD: lastName,
-//             USER_ID_FIELD: currUser.uid,
-//             USER_ROLE_FIELD: userRole,
-//             USER_DATE_REGISTERED_FIELD: dateRegistered,
-//             USER_SOCIAL_FIELD: connectedSocials,
-//             USER_USERNAME_FIELD: username,
-//           })
-//           .then((value) =>
-//               print('$firstName $lastName created in Firestore Database.'))
-//           .catchError((error) => print('Failed to create user: $error'));
-//     } else {
-//       print('User was null, so could not complete createUserInDatabase()');
-//     }
-//   }
+  Stream<List<Member>> streamUsers() {
+    return _firestoreInstance.collection(USERS_COLLECTION).snapshots().map(
+        (QuerySnapshot list) => list.docs
+            .map((DocumentSnapshot snap) =>
+                Member.fromMap(snap.data() as Map<String, dynamic>) as Member)
+            .toList());
+    // );
+  }
 
-//   Future<Map<String, dynamic>?> getUserInfoFromFirestore(User? currUser) async {
-//     try {
-//       // await _firestoreInstance
-//       //     .collection(USERS_COLLECTION)
-//       //     .where(USER_ID_FIELD, isEqualTo: currUser?.uid ?? '').get().then((value) => value.docs.);
+  // Future createMessageInDatabase(MessageCard msgCardToAdd) async {
+  //   try {
+  //     // checks to make sure room collection exists
+  //     if (ALL_ROOMS.contains(msgCardToAdd.room)) {
+  //       _firestoreInstance
+  //           .collection(ROOM_COLLECTION)
+  //           .doc(msgCardToAdd.room)
+  //           .collection(MSG_COLLECTION)
+  //           .add({
+  //         MSG_AUTHOR_FIELD: msgCardToAdd.author,
+  //         MSG_CONTENT_FIELD: msgCardToAdd.content,
+  //         MSG_DATE_FIELD: msgCardToAdd.date,
+  //         MSG_ROOM_FIELD: msgCardToAdd.room,
+  //       });
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
-//       DocumentSnapshot<Map<String, dynamic>> result = await _firestoreInstance
-//           .collection(USERS_COLLECTION)
-//           .doc(currUser?.uid)
-//           .get();
+  // Future<List<MessageCard>> getAllHealthMessages() async {
+  //   List<MessageCard> _messageList = [];
+  //   print("trying to gather messages...");
+  //   try {
+  //     _firestoreInstance
+  //         .collection(ROOM_COLLECTION)
+  //         .doc(HEALTH_ROOM)
+  //         .collection(MSG_COLLECTION)
+  //         .get()
+  //         .then((res) {
+  //       res.docs.forEach((element) {
+  //         // print(MessageCard.fromMap(element.data()));
+  //         _messageList.add(MessageCard.fromMap(element.data()));
+  //         print('list is now $_messageList');
+  //       });
+  //       return _messageList;
+  //     });
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  //   return _messageList;
+  // }
 
-//       print("VALUE IN DB PULLED IS ${result.data()}");
-//       return result.data();
-//     } catch (e) {
-//       print(e);
-//     }
-//   }
+  // List<MessageCard> convertToMessageList(
+  //     QuerySnapshot<Map<String, dynamic>> snapshot) {
+  //   List<MessageCard> _healthMessageList = [];
+  //   snapshot.docs.forEach((element) {
+  //     _healthMessageList.add(MessageCard.fromMap(element.data()));
+  //   });
+  //   return _healthMessageList;
+  // }
 
-//   Future createMessageInDatabase(MessageCard msgCardToAdd) async {
-//     try {
-//       // checks to make sure room collection exists
-//       if (ALL_ROOMS.contains(msgCardToAdd.room)) {
-//         _firestoreInstance
-//             .collection(ROOM_COLLECTION)
-//             .doc(msgCardToAdd.room)
-//             .collection(MSG_COLLECTION)
-//             .add({
-//           MSG_AUTHOR_FIELD: msgCardToAdd.author,
-//           MSG_CONTENT_FIELD: msgCardToAdd.content,
-//           MSG_DATE_FIELD: msgCardToAdd.date,
-//           MSG_ROOM_FIELD: msgCardToAdd.room,
-//         });
-//       }
-//     } catch (e) {
-//       print(e);
-//     }
-//   }
+  // Stream<List<MessageCard>> get healthMessages => _firestoreInstance
+  //     .collection(ROOM_COLLECTION)
+  //     .doc(HEALTH_ROOM)
+  //     .collection(MSG_COLLECTION)
+  //     .orderBy("date", descending: true)
+  //     // .limit(20)
+  //     .snapshots()
+  //     .map(convertToMessageList);
 
-//   Future<List<MessageCard>> getAllHealthMessages() async {
-//     List<MessageCard> _messageList = [];
-//     print("trying to gather messages...");
-//     try {
-//       _firestoreInstance
-//           .collection(ROOM_COLLECTION)
-//           .doc(HEALTH_ROOM)
-//           .collection(MSG_COLLECTION)
-//           .get()
-//           .then((res) {
-//         res.docs.forEach((element) {
-//           // print(MessageCard.fromMap(element.data()));
-//           _messageList.add(MessageCard.fromMap(element.data()));
-//           print('list is now $_messageList');
-//         });
-//         return _messageList;
-//       });
-//     } catch (e) {
-//       print(e);
-//     }
-//     return _messageList;
-//   }
+  // Stream<List<MessageCard>> get gamesMessages => _firestoreInstance
+  //     .collection(ROOM_COLLECTION)
+  //     .doc(GAMES_ROOM)
+  //     .collection(MSG_COLLECTION)
+  //     .orderBy("date", descending: true)
+  //     // .limit(20)
+  //     .snapshots()
+  //     .map(convertToMessageList);
 
-//   List<MessageCard> convertToMessageList(
-//       QuerySnapshot<Map<String, dynamic>> snapshot) {
-//     List<MessageCard> _healthMessageList = [];
-//     snapshot.docs.forEach((element) {
-//       _healthMessageList.add(MessageCard.fromMap(element.data()));
-//     });
-//     return _healthMessageList;
-//   }
+  Future updateUsername(String uid, String newUsername) async {
+    _firestoreInstance
+        .collection(USERS_COLLECTION)
+        .doc(uid)
+        .update({USER_USERNAME_FIELD: newUsername})
+        .then((value) => print('Updated username to $newUsername.'))
+        .catchError((error) => print('Failed to create user: $error'));
+  }
 
-//   Stream<List<MessageCard>> get healthMessages => _firestoreInstance
-//       .collection(ROOM_COLLECTION)
-//       .doc(HEALTH_ROOM)
-//       .collection(MSG_COLLECTION)
-//       .orderBy("date", descending: true)
-//       .limit(20)
-//       .snapshots()
-//       .map(convertToMessageList);
+  // Stream<List<MessageCard>> get businessMessages => _firestoreInstance
+  //     .collection(ROOM_COLLECTION)
+  //     .doc(BUSINESS_ROOM)
+  //     .collection(MSG_COLLECTION)
+  //     .orderBy("date", descending: true)
+  //     // .limit(20)
+  //     .snapshots()
+  //     .map(convertToMessageList);
 
-//   Stream<List<MessageCard>> get gamesMessages => _firestoreInstance
-//       .collection(ROOM_COLLECTION)
-//       .doc(GAMES_ROOM)
-//       .collection(MSG_COLLECTION)
-//       .orderBy("date", descending: true)
-//       .limit(20)
-//       .snapshots()
-//       .map(convertToMessageList);
+  // Stream<List<MessageCard>> get studyMessages => _firestoreInstance
+  //     .collection(ROOM_COLLECTION)
+  //     .doc(STUDY_ROOM)
+  //     .collection(MSG_COLLECTION)
+  //     .orderBy("date", descending: true)
+  //     // .limit(20)
+  //     .snapshots()
+  //     .map(convertToMessageList);
 
-//   Stream<List<MessageCard>> get businessMessages => _firestoreInstance
-//       .collection(ROOM_COLLECTION)
-//       .doc(BUSINESS_ROOM)
-//       .collection(MSG_COLLECTION)
-//       .orderBy("date", descending: true)
-//       .limit(20)
-//       .snapshots()
-//       .map(convertToMessageList);
+  // Stream<Member?> getMember(User? currUser) {
+  //   return _firestoreInstance
+  //       .collection(USERS_COLLECTION)
+  //       .doc(currUser?.uid)
+  //       .snapshots()
+  //       .map((event) => Member.fromMap(event.data()));
+  // }
 
-//   Stream<List<MessageCard>> get studyMessages => _firestoreInstance
-//       .collection(ROOM_COLLECTION)
-//       .doc(STUDY_ROOM)
-//       .collection(MSG_COLLECTION)
-//       .orderBy("date", descending: true)
-//       .limit(20)
-//       .snapshots()
-//       .map(convertToMessageList);
-
-//   Stream<Member?> getMember(User? currUser) {
-//     return _firestoreInstance
-//         .collection(USERS_COLLECTION)
-//         .doc(currUser?.uid)
-//         .snapshots()
-//         .map((event) => Member.fromMap(event.data()));
-//   }
-
-//   Stream<Member?> currFirestoreMember(User? currUser) {
-//     return _firestoreInstance
-//         .collection(USERS_COLLECTION)
-//         .doc(currUser?.uid)
-//         .snapshots()
-//         .map((event) => Member.fromMap(event.data()));
-//   }
-// }
+  // Stream<Member?> currFirestoreMember(User? currUser) {
+  //   return _firestoreInstance
+  //       .collection(USERS_COLLECTION)
+  //       .doc(currUser?.uid)
+  //       .snapshots()
+  //       .map((event) => Member.fromMap(event.data()));
+  // }
+}

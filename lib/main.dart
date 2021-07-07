@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:lets_talk_money/screens/debug.dart';
 import 'package:lets_talk_money/screens/home.dart';
 import 'package:lets_talk_money/screens/welcome.dart';
-import 'package:lets_talk_money/services.dart/auth.dart';
+import 'package:lets_talk_money/services/auth.dart';
 import 'package:lets_talk_money/utils/widgets.dart';
 
 import 'package:provider/provider.dart';
 
-import 'models/Member.dart';
+// import 'models/Member.dart';
 
 void main() {
   // This needs to be called before any Firebase services can be used

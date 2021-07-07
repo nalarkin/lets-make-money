@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:lets_talk_money/services.dart/auth.dart';
-import 'package:lets_talk_money/services.dart/database.dart';
+import 'package:lets_talk_money/services/auth.dart';
+import 'package:lets_talk_money/services/database.dart';
 import 'package:lets_talk_money/utils/widgets.dart';
 
 void main() {

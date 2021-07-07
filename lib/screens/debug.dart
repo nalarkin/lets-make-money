@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lets_talk_money/services.dart/auth.dart';
+import 'package:lets_talk_money/services/auth.dart';
 
 class Debug extends StatelessWidget {
   static const String routeName = '/debug';
