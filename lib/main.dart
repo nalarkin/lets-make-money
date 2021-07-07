@@ -126,6 +126,7 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
               Welcome.routeName: (context) => Welcome(),
               NewConversation.routeName: (context) => NewConversation(),
               ChatScreen.routeName: (context) => ChatScreen(),
+              ExtractArgumentsScreen.routeName: (context) => ExtractArgumentsScreen(),
             }));
   }
 }

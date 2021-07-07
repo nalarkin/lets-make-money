@@ -58,9 +58,14 @@ Widget buildItem(context, Member currMember, User? currUser) {
             // tileColor: Colors.green,
             // tileColor: Theme.of(context).cardColor,
             leading: Icon(Icons.face),
-            onTap: () => Navigator.pushNamed(context, ChatScreen.routeName,
-                arguments: HelperFunctions.getConvoID(
-                    currUser?.uid ?? '', currMember.id)),
+            onTap: () {
+              String generatedConvoID = HelperFunctions.getConvoID(
+                  currUser?.uid ?? '', currMember.id);
+              print("CONVO Member $currMember currUser $currUser");
+              print("generated CONVOID is $generatedConvoID");
+              Navigator.pushNamed(context, ChatScreen.routeName,
+                  arguments: ChatScreen(convoID: generatedConvoID));
+            },
             title: Text(currMember.username,
                 style: Theme.of(context).textTheme.bodyText2?.copyWith(
                       color: Colors.black,

@@ -13,7 +13,7 @@ class ChatScreen extends StatefulWidget {
   static const String routeName = '/chat_screen';
   // const ChatScreen({ Key? key }) : super(key: key);
   ChatScreen({this.convoID = ''});
-  final String convoID;
+  String convoID;
 
   @override
   _ChatScreenState createState() => _ChatScreenState(convoID: convoID);
@@ -33,6 +33,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as ChatScreen;
+    this.convoID = args.convoID;
+    print("CONVOID IS : $convoID");
     return Scaffold(
       appBar: myAppbar("Games Room"),
       body: Stack(children: <Widget>[

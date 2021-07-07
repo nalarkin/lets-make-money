@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lets_talk_money/screens/chat_screen.dart';
 import 'package:lets_talk_money/styles/colors.dart';
 
 class Header extends StatelessWidget {
@@ -94,4 +95,25 @@ class StyledButton extends StatelessWidget {
         color: kButtonColor,
         onPressed: onPressed,
       );
+}
+
+
+class ExtractArgumentsScreen extends StatelessWidget {
+  static const routeName = '/extractArguments';
+
+  @override
+  Widget build(BuildContext context) {
+    // Extract the arguments from the current ModalRoute
+    // settings and cast them as ScreenArguments.
+    final args = ModalRoute.of(context)!.settings.arguments as ChatScreen;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(args.convoID),
+      ),
+      body: Center(
+        child: Text(args.convoID),
+      ),
+    );
+  }
 }
