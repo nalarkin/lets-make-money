@@ -9,6 +9,7 @@ class AuthService {
   FirebaseAuth _auth = FirebaseAuth.instance;
   // User? user;
   // AuthService();
+  Stream<User?> get currentUser => _auth.userChanges();
 
   User? get firebaseUser => _auth.currentUser;
 
@@ -17,6 +18,8 @@ class AuthService {
     if (currUser != null) {
       return currUser;
     }
+
+    // first time user
     User? newUser = await signInAnon();
     return newUser;
   }
@@ -90,13 +93,17 @@ class AuthService {
   }
 
   // anonymous sign in
+  // update display name to 'Guest'
   Future<User?> signInAnon() async {
     print('trying to sign in anonymously');
     try {
       UserCredential result = await _auth.signInAnonymously();
       User? currUser = result.user;
+      await currUser?.updateDisplayName("Guest");
+      // await currUser?.reload();
+      User? updatedUser = _auth.currentUser;
       print("signed in anonymously with user: $currUser");
-      return currUser;
+      return updatedUser;
     } catch (e) {
       print(e.toString());
       return null;
