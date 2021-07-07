@@ -4,6 +4,7 @@ import 'package:lets_talk_money/models/member.dart';
 import 'package:lets_talk_money/models/message.dart';
 import 'package:lets_talk_money/screens/new_message_provider.dart';
 import 'package:lets_talk_money/services/auth.dart';
+import 'package:lets_talk_money/utils/convo_widget.dart';
 import 'package:provider/provider.dart';
 
 class HomeBuilder extends StatelessWidget {
@@ -53,15 +54,15 @@ class HomeBuilder extends StatelessWidget {
     if (_convos != null && _users != null && user != null) {
       final Map<String, Member> userMap = getUserMap(_users);
       for (Message c in _convos) {
-        if (c.userIds[0] == user.uid) {
-          list.add(MessageListItem(
+        if (c.idFrom == user.uid) {
+          list.add(ConvoListItem(
               user: user,
-              peer: userMap[c.userIds[1]],
-              lastMessage: c.lastMessage));
+              peer: userMap[c.idTo] as Member,
+              lastMessage: c.lastMessage ?? Map()));
         } else {
-          list.add(MessageListItem(
+          list.add(ConvoListItem(
               user: user,
-              peer: userMap[c.userIds[0]],
+              peer: userMap[c.idFrom] ?? Member(),
               lastMessage: c.lastMessage));
         }
       }

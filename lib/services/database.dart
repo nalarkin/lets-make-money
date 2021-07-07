@@ -83,6 +83,8 @@ class DatabaseService with ChangeNotifier {
         .set(<String, dynamic>{'read': true}, SetOptions(merge: true));
   }
 
+  //  this represents message collection (not subcollection!)
+  // lastMessage adn users array are visible to this 
   Stream<List<Message>> streamConversations(String uid) {
     return _firestoreInstance
         .collection('messages')

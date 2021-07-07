@@ -8,6 +8,8 @@ class Message {
   String idTo;
   // String convoID;
   bool read;
+  Map<dynamic, dynamic>? lastMessage;
+  List<String>? users;
 
 // sendMessage(convoID, uid, contact.id, content,
 //           DateTime.now().millisecondsSinceEpoch.toString());
@@ -19,24 +21,36 @@ class Message {
     this.content = '',
     this.timestamp = '',
     this.read = false,
+    this.lastMessage,
+    this.users,
+   
   });
 
-// 'lastMessage': <String, dynamic>{
-//         'idFrom': id,
-//         'idTo': pid,
-//         'timestamp': timestamp,
-//         'content': content,
-//         'read': false
-//       },
-//       'users': <String>[id, pid]
-
   factory Message.fromMap(Map<String, dynamic> userInfo) {
+
+    
+    // userInfo {
+    //   lastMessage {
+    //         content: "hey"
+    //         idFrom: ""
+    //         idTo: ""
+    //         read: false
+    //         timestamp: ""
+
+    //   },
+    //   users ["nautsyrnutysrntyuf", "lufmr9;lkftulrakmtf"]
+    // }
+    
+
+    
     Message res = new Message(
-      idFrom: userInfo['idFrom'],
-      idTo: userInfo['idTo'],
-      read: userInfo['read'],
-      timestamp: userInfo["date"].toString(),
-      content: userInfo["content"],
+      idFrom: userInfo['lastMessage']['idFrom'],
+      idTo: userInfo['lastMessage']['idTo'],
+      read: userInfo['lastMessage']['read'],
+      timestamp: userInfo['lastMessage']["date"].toString(),
+      content: userInfo['lastMessage']["content"],
+      lastMessage: userInfo['lastMessage'] as Map<String, dynamic>,
+      users: userInfo['users'],
     );
     print("Created $res");
     return res;
