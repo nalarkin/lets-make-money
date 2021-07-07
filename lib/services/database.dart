@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lets_talk_money/models/conversation.dart';
 import 'package:lets_talk_money/models/member.dart';
 import 'package:lets_talk_money/models/message.dart';
 import 'package:async/async.dart';
@@ -27,7 +28,6 @@ class DatabaseService {
   // static const String HEALTH_ROOM = 'healthRoom';
   static const String MSG_COLLECTION = 'messages';
 
-  
   static const String MSG_ID_FROM = 'idFrom';
   static const String MSG_LAST_MESSAGE = 'lastMessage';
   static const String MSG_USER_ARRAY = 'participants';
@@ -63,7 +63,6 @@ class DatabaseService {
     }
   }
 
-
   List<MessageCard> convertToMessageList(
       QuerySnapshot<Map<String, dynamic>> snapshot) {
     List<MessageCard> _healthMessageList = [];
@@ -72,7 +71,7 @@ class DatabaseService {
     });
     return _healthMessageList;
   }
-  
+
   // Stream<List<User>> streamUsers() {
   //   return _firestoreInstance.collection(USERS_COLLECTION)
   //   .snapshots().map((event) => null)
@@ -102,15 +101,19 @@ class DatabaseService {
 
   //  this represents message collection (not subcollection!)
   // lastMessage adn users array are visible to this
-  Stream<List<Message>> streamConversations(String uid) {
+  Stream<List<Conversation>> streamConversations(String uid) {
+    if (uid.isEmpty) {
+      print("ERROR. streamConverations(String uid) UID IS EMPTY");
+      throw (StackTrace.current);
+    }
     return _firestoreInstance
-        .collection('messages')
-        .orderBy('lastMessage.timestamp', descending: true)
-        .where('users', arrayContains: uid)
+        .collection(MSG_COLLECTION)
+        .orderBy('$MSG_LAST_MESSAGE.$MSG_TIMESTAMP', descending: true)
+        .where(MSG_USER_ARRAY, arrayContains: uid)
         .snapshots()
         .map((QuerySnapshot list) => list.docs
-            .map((DocumentSnapshot doc) =>
-                Message.fromMap(doc.data() as Map<String, dynamic>))
+            .map((DocumentSnapshot doc) => Conversation.fromMap(
+                doc.id, doc.data() as Map<String, dynamic>))
             .toList());
   }
 
@@ -144,37 +147,35 @@ class DatabaseService {
   Future createMessageInDatabase(MessageCard msgCardToAdd) async {
     try {
       // checks to make sure room collection exists
-      String convoID = HelperFunctions.getConvoID(msgCardToAdd.idFrom, msgCardToAdd.idTo);
+      String convoID =
+          HelperFunctions.getConvoID(msgCardToAdd.idFrom, msgCardToAdd.idTo);
       Map<String, dynamic> messageInfo = msgCardToAdd.toMap();
       await _firestoreInstance
-            .collection(MSG_COLLECTION)
-            .doc(convoID)
-            .collection(convoID)
-            .add(messageInfo);
-        //     .add({
-        //   MSG_CONTENT: msgCardToAdd.content,
-        //   MSG_ID_FROM: msgCardToAdd.idFrom,
-        //   MSG_ID_TO: msgCardToAdd.idTo,
-        //   MSG_READ: msgCardToAdd.read,
-        //   MSG_TIMESTAMP: msgCardToAdd.timestamp,
-        // });
-        print("adding message to firestore");
-        await _firestoreInstance
-            .collection(MSG_COLLECTION)
-            .doc(convoID)
-            .set({
-              MSG_LAST_MESSAGE: messageInfo,
-              MSG_USER_ARRAY: [msgCardToAdd.idFrom, msgCardToAdd.idTo],
-            });
-        print("updated last message to $msgCardToAdd");
-        //     .set({
-        //   MSG_CONTENT: msgCardToAdd.content,
-        //   MSG_ID_FROM: msgCardToAdd.idFrom,
-        //   MSG_ID_TO: msgCardToAdd.idTo,
-        //   MSG_READ: msgCardToAdd.read,
-        //   MSG_TIMESTAMP: msgCardToAdd.timestamp,
+          .collection(MSG_COLLECTION)
+          .doc(convoID)
+          .collection(convoID)
+          .add(messageInfo);
+      //     .add({
+      //   MSG_CONTENT: msgCardToAdd.content,
+      //   MSG_ID_FROM: msgCardToAdd.idFrom,
+      //   MSG_ID_TO: msgCardToAdd.idTo,
+      //   MSG_READ: msgCardToAdd.read,
+      //   MSG_TIMESTAMP: msgCardToAdd.timestamp,
+      // });
+      print("adding message to firestore");
+      await _firestoreInstance.collection(MSG_COLLECTION).doc(convoID).set({
+        MSG_LAST_MESSAGE: messageInfo,
+        MSG_USER_ARRAY: [msgCardToAdd.idFrom, msgCardToAdd.idTo],
+      });
+      print("updated last message to $msgCardToAdd");
+      //     .set({
+      //   MSG_CONTENT: msgCardToAdd.content,
+      //   MSG_ID_FROM: msgCardToAdd.idFrom,
+      //   MSG_ID_TO: msgCardToAdd.idTo,
+      //   MSG_READ: msgCardToAdd.read,
+      //   MSG_TIMESTAMP: msgCardToAdd.timestamp,
 
-        // });
+      // });
       // }
     } catch (e) {
       print(e);

@@ -56,17 +56,24 @@ class _ChatScreenState extends State<ChatScreen> {
     print("CONVOID IS : $convoID");
     return Scaffold(
       appBar: myAppbar("${currReceiver?.username}"),
-      body: Stack(children: <Widget>[
-        Column(
+      body: Stack(
+          // fit: StackFit.expand,
+          // alignment: Alignment.topCenter,
           children: <Widget>[
-            // Flexible(
-            // child: buildMessageList(),
-            buildMessageList(),
-            // ),
-            // buildInput(context, myController),
-          ],
-        )
-      ]),
+            Column(
+              // mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                // Flexible(
+                // child: buildMessageList(),
+                buildMessageList(),
+                // Expanded(
+                //   child: Container(),
+                // ),
+                // ),
+                // buildInput(context, myController),
+              ],
+            )
+          ]),
     );
   }
 
@@ -93,7 +100,7 @@ class _ChatScreenState extends State<ChatScreen> {
         List<MessageCard>? _messageList = snapshot.data;
 
         return new ListView.builder(
-          reverse: true,
+          // reverse: true,
           shrinkWrap: true,
           padding: EdgeInsets.all(10.0),
           itemCount: snapshot.data?.length,

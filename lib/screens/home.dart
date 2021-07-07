@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lets_talk_money/models/conversation.dart';
 import 'package:lets_talk_money/models/message_card.dart';
 import 'package:lets_talk_money/screens/new_conversation.dart';
 import 'package:lets_talk_money/services/auth.dart';
@@ -15,45 +16,60 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     User? currUser = Provider.of<User?>(context);
-    AuthService _auth = AuthService();
-    print(currUser);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(currUser?.displayName ?? ''),
-        actions: [
-          IconButton(
-              // onPressed: () => createNewConvo(context),
-              onPressed: () =>
-                  Navigator.pushNamed(context, NewConversation.routeName),
-              icon: Icon(
-                Icons.add,
-                size: 30,
-              ))
-        ],
-      ),
-      body: Container(
-          child: Center(
-        child: Column(
-          children: [
-            Text("$currUser"),
-            MaterialButton(
-              onPressed: () async => await _auth.signOut(),
-              child: Text("Sign out"),
-            ),
-            MaterialButton(
-              onPressed: () async =>
-                  DatabaseService().createUserInDatabase(currUser),
-              child: Text("create user"),
-            ),
-            MaterialButton(
-              onPressed: () async => createDummyMessage(),
-              child: Text("Create Message"),
-            ),
-          ],
-        ),
-      )),
+    // AuthService _auth = AuthService();
+    // print(currUser);
+
+    return StreamProvider<List<Conversation>>.value(
+      initialData: [],
+      value: Provider.of<DatabaseService>(context)
+          .streamConversations(currUser?.uid ?? ''),
+      child: homePageConversations(context),
     );
   }
+}
+
+Widget homePageConversations(
+  context,
+) {
+  User? currUser = Provider.of<User?>(context);
+  AuthService _auth = AuthService();
+  print(currUser);
+  return Scaffold(
+    appBar: AppBar(
+      title: Text(currUser?.displayName ?? ''),
+      actions: [
+        IconButton(
+            // onPressed: () => createNewConvo(context),
+            onPressed: () =>
+                Navigator.pushNamed(context, NewConversation.routeName),
+            icon: Icon(
+              Icons.add,
+              size: 30,
+            ))
+      ],
+    ),
+    body: Container(
+        child: Center(
+      child: Column(
+        children: [
+          Text("$currUser"),
+          MaterialButton(
+            onPressed: () async => await _auth.signOut(),
+            child: Text("Sign out"),
+          ),
+          MaterialButton(
+            onPressed: () async =>
+                DatabaseService().createUserInDatabase(currUser),
+            child: Text("create user"),
+          ),
+          MaterialButton(
+            onPressed: () async => createDummyMessage(),
+            child: Text("Create Message"),
+          ),
+        ],
+      ),
+    )),
+  );
 }
 
 Future createDummyMessage() async {
