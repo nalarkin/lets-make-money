@@ -45,15 +45,37 @@ class NewConversation extends StatelessWidget {
 
 Widget buildItem(context, Member currMember) {
   return Container(
-    color: Theme.of(context).cardColor,
-    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      Icon(Icons.face),
-      Text(currMember.username,
-          style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                color: Colors.black,
-              )),
-    ]),
-  );
+      // width: MediaQuery.of(context).size.width * 0.6,
+      // padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      // color: Theme.of(context).cardColor,
+      color: Theme.of(context).cardColor,
+      // margin: EdgeInsets.all(10),
+      child: Column(
+        children: [
+          ListTile(
+            // tileColor: Colors.green,
+            // tileColor: Theme.of(context).cardColor,
+            leading: Icon(Icons.face),
+            onTap: () => null,
+            title: Text(currMember.username,
+                style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                      color: Colors.black,
+                    )),
+          ),
+          Divider(
+            height: 20,
+            color: Colors.black,
+          )
+        ],
+      )
+      // Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      //   Icon(Icons.face),
+      //   Text(currMember.username,
+      //       style: Theme.of(context).textTheme.bodyText2?.copyWith(
+      //             color: Colors.black,
+      //           )),
+      // ]),
+      );
 } 
   
 
