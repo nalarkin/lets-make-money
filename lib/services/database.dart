@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lets_talk_money/models/member.dart';
+import 'package:lets_talk_money/models/message.dart';
 
 class DatabaseService with ChangeNotifier {
   final _firestoreInstance = FirebaseFirestore.instance;
@@ -21,11 +22,11 @@ class DatabaseService with ChangeNotifier {
   // static const String BUSINESS_ROOM = 'businessRoom';
   // static const String STUDY_ROOM = 'studyRoom';
   // static const String HEALTH_ROOM = 'healthRoom';
-  // static const String MSG_COLLECTION = 'messages';
-  // static const String MSG_AUTHOR_FIELD = 'author';
-  // static const String MSG_CONTENT_FIELD = 'content';
-  // static const String MSG_DATE_FIELD = 'date';
-  // static const String MSG_ROOM_FIELD = 'room';
+  static const String MSG_COLLECTION = 'messages';
+  static const String MSG_AUTHOR_FIELD = 'author';
+  static const String MSG_CONTENT_FIELD = 'content';
+  static const String MSG_DATE_FIELD = 'date';
+  static const String MSG_ROOM_FIELD = 'room';
   // static const List ALL_ROOMS = [
   //   GAMES_ROOM,
   //   BUSINESS_ROOM,
@@ -65,9 +66,45 @@ class DatabaseService with ChangeNotifier {
     return _firestoreInstance.collection(USERS_COLLECTION).snapshots().map(
         (QuerySnapshot list) => list.docs
             .map((DocumentSnapshot snap) =>
-                Member.fromMap(snap.data() as Map<String, dynamic>) as Member)
+                Member.fromMap(snap.data() as Map<String, dynamic>))
             .toList());
     // );
+  }
+  // Stream get getMessages => _firestoreInstance.collection(MSG_COLLECTION).doc(convoID).collection(convoID).orderBy('timestamp', descending: true).limit(20).snapshots(),
+
+  void updateMessageRead(DocumentSnapshot document, String convoID) {
+    final DocumentReference documentReference = FirebaseFirestore.instance
+        .collection('messages')
+        .doc(convoID)
+        .collection(convoID)
+        .doc(document.id);
+    documentReference
+        .set(<String, dynamic>{'read': true}, SetOptions(merge: true));
+  }
+
+  Stream<List<Message>> streamConversations(String uid) {
+    return _firestoreInstance
+        .collection('messages')
+        .orderBy('lastMessage.timestamp', descending: true)
+        .where('users', arrayContains: uid)
+        .snapshots()
+        .map((QuerySnapshot list) => list.docs
+            .map((DocumentSnapshot doc) =>
+                Message.fromMap(doc.data() as Map<String, dynamic>))
+            .toList());
+  }
+
+  Stream<List<Member>> getUsersByList(List<String> userIds) {
+    final List<Stream<Member>> streams = [];
+    for (String id in userIds) {
+      streams.add(_firestoreInstance
+          .collection('users')
+          .doc(id)
+          .snapshots()
+          .map((DocumentSnapshot<Map<String, dynamic>> snap) =>
+              Member.fromMap(snap.data())));
+    }
+    return StreamZip<Member>(streams).asBroadcastStream();
   }
 
   // Future createMessageInDatabase(MessageCard msgCardToAdd) async {
