@@ -60,8 +60,12 @@ class _HomePageConversationsState extends State<HomePageConversations> {
     AuthService _auth = AuthService();
     List<Conversation> currConvos = Provider.of<List<Conversation>>(context);
     List<String> currSenders = Provider.of<List<String>>(context);
-    Map<String, Member> memberMap = HelperFunctions.getMemberMap(Provider.of<List<Member>>(context));
-    assert(currSenders.length == currConvos.length);
+    Map<String, Member> memberMap =
+        HelperFunctions.getMemberMap(Provider.of<List<Member>>(context));
+    if (currSenders.length != currConvos.length) {
+      return LoadingCircle();
+    }
+    // assert(currSenders.length == currConvos.length);
     print(currUser);
     print("CURRENT CONVOS: $currConvos");
     return Scaffold(
@@ -69,6 +73,11 @@ class _HomePageConversationsState extends State<HomePageConversations> {
         title: Text(currUser?.displayName ?? ''),
         centerTitle: true,
         actions: [
+          IconButton(
+            onPressed: () => createDummyMessage(
+                "oYwXPIfUFjfDyABGIgXkzdzsYkr2", "O9uAX7fwujV63IVJeWGG84TPxjv1"),
+            icon: Icon(Icons.mail),
+          ),
           IconButton(onPressed: _auth.signOut, icon: Icon(Icons.logout)),
           IconButton(
               // onPressed: () => createNewConvo(context),
@@ -82,8 +91,8 @@ class _HomePageConversationsState extends State<HomePageConversations> {
       ),
       // body: Text("$currConvos"),
       body: ListView.builder(
-        itemBuilder: (context, index) => buildConversationCard(
-            context, currUser, currConvos[index], currSenders[index], memberMap),
+        itemBuilder: (context, index) => buildConversationCard(context,
+            currUser, currConvos[index], currSenders[index], memberMap),
         itemCount: currConvos.length,
       ),
     );
@@ -91,32 +100,39 @@ class _HomePageConversationsState extends State<HomePageConversations> {
 }
 
 Widget buildConversationCard(
-  context, User? currUser, Conversation currConversation, String currSender, Map<String, Member> memberMap) {
-    String currReceiverUsername = memberMap[currConversation.users[1]]?.username ?? '';
-    if (currUser?.uid != currConversation.users[0]) {
-      currReceiverUsername = memberMap[currConversation.users[0]]?.username ?? '';
-    } 
-    // }
-  
+    context,
+    User? currUser,
+    Conversation currConversation,
+    String currSender,
+    Map<String, Member> memberMap) {
+  String currReceiverUsername =
+      memberMap[currConversation.users[1]]?.username ?? '';
+  if (currUser?.uid != currConversation.users[0]) {
+    currReceiverUsername = memberMap[currConversation.users[0]]?.username ?? '';
+  }
+  // }
+
   return Card(
     child: ListTile(
-      onTap:  () {Navigator.pushNamed(context, ChatScreen.routeName,
-                  arguments: ChatScreen(
-                      convoID: currConversation.id,
-                      currReceiver: "REMOVE IF YOU SEE",
-                      currSender: currUser?.uid ?? '',
-                      currReceiverUsername: currReceiverUsername));},
+      onTap: () {
+        Navigator.pushNamed(context, ChatScreen.routeName,
+            arguments: ChatScreen(
+                convoID: currConversation.id,
+                currReceiver: "REMOVE IF YOU SEE",
+                currSender: currUser?.uid ?? '',
+                currReceiverUsername: currReceiverUsername));
+      },
       leading: Text(currSender),
       title: Text(currConversation.lastMessage.content),
     ),
   );
 }
 
-Future createDummyMessage() async {
+Future createDummyMessage(String senderID, String receiverID) async {
   MessageCard msgCardToAdd = MessageCard(
       content: "dummy content",
-      idFrom: "XE3kK3v8OYQNkA9R19nlZoh7toJ2",
-      idTo: "oYwXPIfUFjfDyABGIgXkzdzsYkr2",
+      idFrom: senderID,
+      idTo: receiverID,
       read: false,
       timestamp: Timestamp.now());
   DatabaseService db = DatabaseService();
