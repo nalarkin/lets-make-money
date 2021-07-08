@@ -18,6 +18,47 @@ class _ProfileState extends State<Profile> {
     return Scaffold(
       appBar: customAppBar(context, "Profile"),
       drawer: customDrawer(context),
+      body: Column(
+        children: [
+          // Padding(
+          //   padding: EdgeInsets.fromLTRB(10, 60, 10, 40),
+          // child:
+          Card(
+            margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  // color: Colors.blue,
+                  child: ListTile(
+                    // minVerticalPadding: 30,
+                    leading: Icon(
+                      Icons.face,
+                      size: 60,
+                    ),
+                  ),
+                ),
+                // Container(
+                // color: Colors.red,
+                // child:
+                Container(
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.fromLTRB(10, 30, 10, 30),
+                  child: Text("${currUser?.displayName}"),
+                )
+
+                //   ),
+                //   Text("${currUser?.displayName}"),
+              ],
+            ),
+            //     ),
+            //     ),
+            //   ],
+            // ),
+          ),
+          // )
+        ],
+      ),
     );
   }
 }
