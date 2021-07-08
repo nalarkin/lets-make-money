@@ -35,6 +35,7 @@ class _ChatScreenState extends State<ChatScreen> {
       required this.currReceiver,
       required this.currSender});
   String convoID;
+  
   User? currSender;
   Member? currReceiver;
   @override
@@ -91,7 +92,7 @@ class _ChatScreenState extends State<ChatScreen> {
           (BuildContext context, AsyncSnapshot<List<MessageCard>> snapshot) {
         if (snapshot.hasError) {
           // print(snapshot.error);
-          return Text('Something went wrong. \n Error ${snapshot.error}');
+          return Text('Something went wrong. Error ${snapshot.error}');
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {

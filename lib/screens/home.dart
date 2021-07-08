@@ -90,7 +90,9 @@ class _HomePageConversationsState extends State<HomePageConversations> {
 Widget buildConversationCard(
     context, User? currUser, Conversation currConversation, Member currSender) {
   return Card(
+    
     child: ListTile(
+      onTap: ,
       leading: Text(currSender.username),
       title: Text(currConversation.lastMessage.content),
     ),
