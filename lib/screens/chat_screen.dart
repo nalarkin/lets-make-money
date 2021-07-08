@@ -49,6 +49,7 @@ class _ChatScreenState extends State<ChatScreen> {
   String currReceiver;
   String currSender;
   String currReceiverUsername;
+  final ScrollController listScrollController = ScrollController();
 
   // User? currSender;
   // Member? currReceiver;
@@ -68,11 +69,12 @@ class _ChatScreenState extends State<ChatScreen> {
     this.currSender = args.currSender;
     this.currReceiver = args.currReceiver;
     this.currReceiverUsername = args.currReceiverUsername;
-    TextEditingController myController = TextEditingController();
+    final TextEditingController myController = TextEditingController();
 
     print("CONVOID IS : $convoID");
     return Scaffold(
       appBar: myAppbar("$currReceiverUsername"),
+      backgroundColor: Theme.of(context).backgroundColor,
       body: Stack(
           // fit: StackFit.expand,
           // alignment: Alignment.topCenter,
@@ -82,6 +84,9 @@ class _ChatScreenState extends State<ChatScreen> {
             //     children: <Widget>[
             // Flexible(
             // child: buildMessageList(),
+            // Expanded(
+            //   child: buildMessageList(),
+            // ),
             buildMessageList(),
 
             // Expanded(
@@ -126,6 +131,7 @@ class _ChatScreenState extends State<ChatScreen> {
           shrinkWrap: true,
           padding: EdgeInsets.all(10.0),
           itemCount: snapshot.data?.length,
+          // controller: listScrollController,
           itemBuilder: (context, index) =>
               buildItem(context, _messageList?[index] ?? MessageCard()),
         );
@@ -256,6 +262,7 @@ class _ChatScreenState extends State<ChatScreen> {
         (convoIDs[0] != currUser?.uid) ? convoIDs[0] : convoIDs[1];
     DatabaseService _db = Provider.of<DatabaseService>(context);
     return Container(
+        color: Theme.of(context).primaryColorDark,
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Row(
@@ -271,9 +278,14 @@ class _ChatScreenState extends State<ChatScreen> {
                             ?.copyWith(color: Colors.black),
                         maxLines: 5,
                         controller: myController,
-                        decoration: const InputDecoration.collapsed(
-                          hintText: 'Type your message...',
-                        ),
+                        decoration: InputDecoration.collapsed(
+                            fillColor: Theme.of(context).backgroundColor,
+                            filled: true,
+                            hintText: 'Type your message...',
+                            border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.black, width: 2.0),
+                            )),
                       )),
                 ),
               ),
@@ -288,10 +300,13 @@ class _ChatScreenState extends State<ChatScreen> {
                       idFrom: currUser?.uid ?? '',
                       idTo: receiverID,
                       read: false,
-                      content: msgContent,
+                      content: msgContent.trim(),
                       timestamp: Timestamp.now(),
                     );
                     await _db.createMessageInDatabase(mc);
+                    // listScrollController.animateTo(0.0,
+                    //     duration: Duration(milliseconds: 300),
+                    //     curve: Curves.easeOut);
                     print("Added $mc to Firestore.");
                     // myController.clear();
                   },
