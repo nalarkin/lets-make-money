@@ -70,26 +70,7 @@ class _HomePageConversationsState extends State<HomePageConversations> {
     print("CURRENT CONVOS: $currConvos");
     return Scaffold(
       drawer: customDrawer(context),
-      appBar: AppBar(
-        title: Text(currUser?.displayName ?? ''),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () => createDummyMessage(
-                "oYwXPIfUFjfDyABGIgXkzdzsYkr2", "O9uAX7fwujV63IVJeWGG84TPxjv1"),
-            icon: Icon(Icons.mail),
-          ),
-          IconButton(onPressed: _auth.signOut, icon: Icon(Icons.logout)),
-          IconButton(
-              // onPressed: () => createNewConvo(context),
-              onPressed: () =>
-                  Navigator.pushNamed(context, NewConversation.routeName),
-              icon: Icon(
-                Icons.add,
-                size: 30,
-              ))
-        ],
-      ),
+      appBar: customAppBar(context, currUser?.displayName ?? ''),
       // body: Text("$currConvos"),
       body: ListView.builder(
         itemBuilder: (context, index) => buildConversationCard(context,

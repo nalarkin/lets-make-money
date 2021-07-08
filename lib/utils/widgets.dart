@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lets_talk_money/screens/chat_screen.dart';
+import 'package:lets_talk_money/screens/home.dart';
+import 'package:lets_talk_money/screens/new_conversation.dart';
+import 'package:lets_talk_money/services/auth.dart';
 import 'package:lets_talk_money/styles/colors.dart';
 
 class Header extends StatelessWidget {
@@ -132,10 +135,10 @@ Widget customDrawer(BuildContext context) {
           decoration: BoxDecoration(color: Theme.of(context).primaryColor),
           child: Text(
             'Quick Actions',
-            // style: Theme.of(context)
-            //     .textTheme
-            //     .headline6
-            //     ?.copyWith(color: kOnPrimaryColor),
+            style: Theme.of(context)
+                .textTheme
+                .headline6
+                ?.copyWith(color: Theme.of(context).colorScheme.onBackground),
           ),
         ),
         ListTile(
@@ -189,4 +192,27 @@ Widget customDrawer(BuildContext context) {
               //     Welcome.routeName, (Route<dynamic> route) => false);
             })
       ]));
+}
+
+PreferredSizeWidget customAppBar(BuildContext context, String title) {
+  return AppBar(
+    title: Text(title),
+    centerTitle: true,
+    actions: [
+      IconButton(
+        onPressed: () => createDummyMessage(
+            "oYwXPIfUFjfDyABGIgXkzdzsYkr2", "O9uAX7fwujV63IVJeWGG84TPxjv1"),
+        icon: Icon(Icons.mail),
+      ),
+      IconButton(onPressed: AuthService().signOut, icon: Icon(Icons.logout)),
+      IconButton(
+          // onPressed: () => createNewConvo(context),
+          onPressed: () =>
+              Navigator.pushNamed(context, NewConversation.routeName),
+          icon: Icon(
+            Icons.add,
+            size: 30,
+          ))
+    ],
+  );
 }
