@@ -23,11 +23,13 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Counter App', () {
+  group('LetsMakeMoney App', () {
     // First, define the Finders and use them to locate widgets from the
     // test suite. Note: the Strings provided to the `byValueKey` method must
     // be the same as the Strings we used for the Keys in step 1.
-    final appbarFinder = find.byValueKey('appbar');
+    final appbarTextFinder = find.byValueKey('appbar');
+    final drawerFinder = find.byValueKey('drawer');
+    final drawerProfleFinder = find.byValueKey('drawerProfileButton');
     // final buttonFinder = find.byValueKey('increment');
 
     late FlutterDriver driver;
@@ -42,10 +44,18 @@ void main() {
       driver.close();
     });
 
-    test('starts at 0', () async {
+    test('Appbar title has Guest', () async {
       // Use the `driver.getText` method to verify the counter starts at 0.
       // expect(await driver.getText(counterTextFinder), "0");
-      expect(await driver.getText(appbarFinder), "Guest");
+      expect(await driver.getText(appbarTextFinder), "Guest");
+    });
+
+    test('Drawer is visible', () async {
+      // expect(await driver.get(drawerFinder),
+      await driver.tap(find.byValueKey(drawerFinder));
+      expect(await driver.getText(drawerProfleFinder), "Profile");
+
+      // (appbarTextFinder), "Guest");
     });
 
     // test('increments the counter', () async {

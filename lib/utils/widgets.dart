@@ -126,7 +126,8 @@ Widget customDrawer(BuildContext context) {
       // Add a ListView to the drawer. This ensures the user can scroll
       // through the options in the drawer if there isn't enough vertical
       // space to fit everything.
-
+      key: const Key('drawer'),
+      
       child: ListView(
 
           // Important: Remove any padding from the ListView.
@@ -157,7 +158,7 @@ Widget customDrawer(BuildContext context) {
           },
         ),
         ListTile(
-            title: Text('Profile'),
+            title: Text('Profile', key: const Key('drawerProfileButton'),),
             leading: Icon(
               Icons.face,
               // color: kPrimaryColor,
@@ -192,7 +193,9 @@ Widget customDrawer(BuildContext context) {
             onTap: () {
               // Navigator.of(context).pushNamedAndRemoveUntil(
               //     Welcome.routeName, (Route<dynamic> route) => false);
-            })
+            }),
+            
+
       ]));
 }
 
@@ -204,6 +207,15 @@ PreferredSizeWidget customAppBar(BuildContext context, String title) {
     ),
     centerTitle: true,
     actions: [
+      IconButton(
+          // onPressed: () => createNewConvo(context),
+          onPressed: () =>
+              Navigator.pushNamed(context, Profile.routeName),
+          icon: Icon(
+            Icons.face,
+            size: 30,
+            key: const Key("profileButton"),
+          )),
       IconButton(
         onPressed: () => createDummyMessage(
             "oYwXPIfUFjfDyABGIgXkzdzsYkr2", "O9uAX7fwujV63IVJeWGG84TPxjv1"),
