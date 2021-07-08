@@ -114,7 +114,7 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
         ],
         child: MaterialApp(
             title: 'Nathan',
-            theme: ThemeData(primarySwatch: Colors.blue),
+            theme: ThemeData(primarySwatch: Colors.blueGrey),
             home: Welcome(),
 
             // To navigate to another page enter type the command:
@@ -126,7 +126,8 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
               Welcome.routeName: (context) => Welcome(),
               NewConversation.routeName: (context) => NewConversation(),
               ChatScreen.routeName: (context) => ChatScreen(),
-              ExtractArgumentsScreen.routeName: (context) => ExtractArgumentsScreen(),
+              ExtractArgumentsScreen.routeName: (context) =>
+                  ExtractArgumentsScreen(),
             }));
   }
 }

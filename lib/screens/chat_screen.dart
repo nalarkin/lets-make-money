@@ -38,7 +38,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final myController = TextEditingController();
+  // final myController = TextEditingController();
   // _ChatScreenState();
   _ChatScreenState(
       {required this.convoID,
@@ -50,6 +50,7 @@ class _ChatScreenState extends State<ChatScreen> {
   String currSender;
   String currReceiverUsername;
   final ScrollController listScrollController = ScrollController();
+  final TextEditingController myController = TextEditingController();
 
   // User? currSender;
   // Member? currReceiver;
@@ -69,7 +70,6 @@ class _ChatScreenState extends State<ChatScreen> {
     this.currSender = args.currSender;
     this.currReceiver = args.currReceiver;
     this.currReceiverUsername = args.currReceiverUsername;
-    final TextEditingController myController = TextEditingController();
 
     print("CONVOID IS : $convoID");
     return Scaffold(
@@ -153,7 +153,8 @@ class _ChatScreenState extends State<ChatScreen> {
             child: Container(
               margin: const EdgeInsets.symmetric(vertical: 5),
               child: Bubble(
-                  color: kSelfMessageTileColor,
+                  // color: kSelfMessageTileColor,
+                  color: Theme.of(context).primaryColor.withOpacity(0.4),
                   elevation: 0,
                   padding: const BubbleEdges.fromLTRB(10, 4, 10, 4),
                   nip: BubbleNip.rightTop,
@@ -206,7 +207,7 @@ class _ChatScreenState extends State<ChatScreen> {
               width: 300.0,
               margin: const EdgeInsets.symmetric(vertical: 5),
               child: Bubble(
-                  color: kMessageTileColor,
+                  color: Theme.of(context).primaryColor.withOpacity(0.1),
                   elevation: 0,
                   padding: const BubbleEdges.fromLTRB(10, 4, 10, 4),
                   nip: BubbleNip.leftTop,
@@ -261,7 +262,7 @@ class _ChatScreenState extends State<ChatScreen> {
         (convoIDs[0] != currUser?.uid) ? convoIDs[0] : convoIDs[1];
     DatabaseService _db = Provider.of<DatabaseService>(context);
     return Container(
-        color: Theme.of(context).primaryColorDark,
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Row(
@@ -278,21 +279,25 @@ class _ChatScreenState extends State<ChatScreen> {
                         maxLines: 5,
                         controller: myController,
                         decoration: InputDecoration.collapsed(
-                            fillColor:
-                                Theme.of(context).scaffoldBackgroundColor,
-                            filled: true,
-                            hintText: 'Type your message...',
-                            border: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.black, width: 2.0),
-                            )),
+                          fillColor: Theme.of(context).scaffoldBackgroundColor,
+                          // filled: true,
+                          hintText: 'Type your message...',
+                          // border: OutlineInputBorder(
+                          //   borderSide:
+                          //       BorderSide(color: Colors.black, width: 2.0),
+                          // )
+                        ),
                       )),
                 ),
               ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: IconButton(
-                  icon: Icon(Icons.send, size: 25),
+                  icon: Icon(
+                    Icons.send,
+                    size: 25,
+                    color: Theme.of(context).accentColor,
+                  ),
                   onPressed: () async {
                     String msgContent = myController.text;
                     myController.clear();
