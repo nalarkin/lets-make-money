@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:lets_talk_money/models/conversation.dart';
 import 'package:lets_talk_money/models/member.dart';
 import 'package:lets_talk_money/models/message_card.dart';
@@ -11,6 +12,7 @@ import 'package:lets_talk_money/services/database.dart';
 import 'package:lets_talk_money/utils/helper.dart';
 import 'package:lets_talk_money/utils/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:lets_talk_money/utils/ad_helper.dart';
 
 class Home extends StatelessWidget {
   static const String routeName = "/home";
@@ -30,6 +32,21 @@ class Home extends StatelessWidget {
                 .streamConversations(currUser.uid),
             child: getUserList());
   }
+}
+
+// Widget initializeAds() {
+//   FutureBuilder(
+//     future: _initGoogleMobileAds,
+//     initialData: null,
+//     builder: (BuildContext context, AsyncSnapshot snapshot) {
+//       return ;
+//     },
+//   ),
+// }
+
+// Initialize Google Mobile Ads SDK
+Future<InitializationStatus> _initGoogleMobileAds() {
+  return MobileAds.instance.initialize();
 }
 
 class getUserList extends StatelessWidget {
@@ -74,11 +91,38 @@ class _HomePageConversationsState extends State<HomePageConversations> {
       drawer: customDrawer(context),
       appBar: customAppBar(context, currUser?.displayName ?? ''),
       // body: Text("$currConvos"),
-      body: ListView.builder(
-        itemBuilder: (context, index) => buildConversationCard(context,
-            currUser, currConvos[index], currSenders[index], memberMap),
-        itemCount: currConvos.length,
+      body: FutureBuilder(
+        future: _initGoogleMobileAds(),
+        // initialData: InitialData,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          return BuildConversations();
+        },
       ),
+    );
+  }
+}
+
+class BuildConversations extends StatefulWidget {
+  const BuildConversations({Key? key}) : super(key: key);
+
+  @override
+  _BuildConversationsState createState() => _BuildConversationsState();
+}
+
+class _BuildConversationsState extends State<BuildConversations> {
+  @override
+  Widget build(BuildContext context) {
+    
+    User? currUser = Provider.of<User?>(context);
+    AuthService _auth = AuthService();
+    List<Conversation> currConvos = Provider.of<List<Conversation>>(context);
+    List<String> currSenders = Provider.of<List<String>>(context);
+    Map<String, Member> memberMap =
+        HelperFunctions.getMemberMap(Provider.of<List<Member>>(context));
+    return ListView.builder(
+      itemBuilder: (context, index) => buildConversationCard(
+          context, currUser, currConvos[index], currSenders[index], memberMap),
+      itemCount: currConvos.length,
     );
   }
 }
