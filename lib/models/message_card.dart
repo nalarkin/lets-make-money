@@ -44,6 +44,6 @@ class MessageCard {
 
   @override
   String toString() {
-    return "MessageCard(from:$idFrom \n to:$idTo,\n content:$content \n read?:$read)";
+    return "MessageCard(from:$idFrom  to:$idTo, content:$content  read?:$read)";
   }
 }

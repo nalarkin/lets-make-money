@@ -102,19 +102,58 @@ class DatabaseService {
   //  this represents message collection (not subcollection!)
   // lastMessage adn users array are visible to this
   Stream<List<Conversation>> streamConversations(String uid) {
-    if (uid.isEmpty) {
-      print("ERROR. streamConverations(String uid) UID IS EMPTY");
-      throw (StackTrace.current);
+    try {
+      if (uid.isEmpty) {
+        print("ERROR. streamConverations(String uid) UID IS EMPTY");
+        throw (StackTrace.current);
+      }
+      return _firestoreInstance
+          .collection(MSG_COLLECTION)
+          .orderBy('$MSG_LAST_MESSAGE.$MSG_TIMESTAMP', descending: true)
+          .where(MSG_USER_ARRAY, arrayContains: uid)
+          .snapshots()
+          .map((QuerySnapshot list) => list.docs
+              .map((DocumentSnapshot doc) => Conversation.fromMap(
+                  doc.id, doc.data() as Map<String, dynamic>))
+              .toList());
+    } catch (e) {
+      print("ERROR Occured in Database().streamConversations");
+      print("String uid: $uid");
+      print(StackTrace.current);
+      print(e);
+      throw (e);
     }
-    return _firestoreInstance
-        .collection(MSG_COLLECTION)
-        .orderBy('$MSG_LAST_MESSAGE.$MSG_TIMESTAMP', descending: true)
-        .where(MSG_USER_ARRAY, arrayContains: uid)
-        .snapshots()
-        .map((QuerySnapshot list) => list.docs
-            .map((DocumentSnapshot doc) => Conversation.fromMap(
-                doc.id, doc.data() as Map<String, dynamic>))
-            .toList());
+  }
+
+  Stream<List<Member>> convertConversationsToMembers(
+      User? currUser, List<Conversation> convoList) {
+    List<String> _senders = grabMostRecentSender(currUser, convoList);
+    print(convoList.toString());
+    print(_senders.toString());
+    List<Stream<Member>> res = [];
+    for (String id in _senders) {
+      res.add(_firestoreInstance
+          .collection(USERS_COLLECTION)
+          .doc(id)
+          .snapshots()
+          .map((event) => Member.fromMap(event.data())));
+    }
+    return StreamZip<Member>(res).asBroadcastStream();
+  }
+
+  List<String> grabMostRecentSender(
+      User? currUser, List<Conversation> convoList) {
+    List<String> _senders = [];
+    String currUserUID = currUser?.uid ?? '';
+    assert(currUserUID.isNotEmpty);
+    for (Conversation convo in convoList) {
+      if (convo.lastMessage.idFrom == currUserUID) {
+        _senders.add(currUserUID);
+      } else {
+        _senders.add(convo.lastMessage.idFrom);
+      }
+    }
+    return _senders;
   }
 
   Stream<List<Member>> get streamMembers => _firestoreInstance

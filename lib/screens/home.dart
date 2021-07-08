@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lets_talk_money/models/conversation.dart';
+import 'package:lets_talk_money/models/member.dart';
 import 'package:lets_talk_money/models/message_card.dart';
 import 'package:lets_talk_money/screens/new_conversation.dart';
 import 'package:lets_talk_money/services/auth.dart';
@@ -20,55 +21,79 @@ class Home extends StatelessWidget {
     // print(currUser);
 
     return StreamProvider<List<Conversation>>.value(
-      initialData: [],
-      value: Provider.of<DatabaseService>(context)
-          .streamConversations(currUser?.uid ?? ''),
-      child: homePageConversations(context),
+        initialData: [],
+        value: Provider.of<DatabaseService>(context)
+            .streamConversations(currUser?.uid ?? ''),
+        child: getUserList());
+  }
+}
+
+class getUserList extends StatelessWidget {
+  const getUserList({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    User? currUser = Provider.of<User?>(context);
+    AuthService _auth = AuthService();
+    List<Conversation> currConvos = Provider.of<List<Conversation>>(context);
+    DatabaseService _db = Provider.of<DatabaseService>(context);
+    return StreamProvider<List<Member>>.value(
+        value: _db.convertConversationsToMembers(currUser, currConvos),
+        initialData: [],
+        child: HomePageConversations());
+  }
+}
+
+class HomePageConversations extends StatefulWidget {
+  const HomePageConversations({Key? key}) : super(key: key);
+
+  @override
+  _HomePageConversationsState createState() => _HomePageConversationsState();
+}
+
+class _HomePageConversationsState extends State<HomePageConversations> {
+  @override
+  Widget build(BuildContext context) {
+    User? currUser = Provider.of<User?>(context);
+    AuthService _auth = AuthService();
+    List<Conversation> currConvos = Provider.of<List<Conversation>>(context);
+    List<Member> currSenders = Provider.of<List<Member>>(context);
+    assert(currSenders.length == currConvos.length);
+    print(currUser);
+    print("CURRENT CONVOS: $currConvos");
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(currUser?.displayName ?? ''),
+        centerTitle: true,
+        actions: [
+          IconButton(onPressed: _auth.signOut, icon: Icon(Icons.logout)),
+          IconButton(
+              // onPressed: () => createNewConvo(context),
+              onPressed: () =>
+                  Navigator.pushNamed(context, NewConversation.routeName),
+              icon: Icon(
+                Icons.add,
+                size: 30,
+              ))
+        ],
+      ),
+      // body: Text("$currConvos"),
+      body: ListView.builder(
+        itemBuilder: (context, index) => buildConversationCard(
+            context, currUser, currConvos[index], currSenders[index]),
+        itemCount: currConvos.length,
+      ),
     );
   }
 }
 
-Widget homePageConversations(
-  context,
-) {
-  User? currUser = Provider.of<User?>(context);
-  AuthService _auth = AuthService();
-  print(currUser);
-  return Scaffold(
-    appBar: AppBar(
-      title: Text(currUser?.displayName ?? ''),
-      actions: [
-        IconButton(
-            // onPressed: () => createNewConvo(context),
-            onPressed: () =>
-                Navigator.pushNamed(context, NewConversation.routeName),
-            icon: Icon(
-              Icons.add,
-              size: 30,
-            ))
-      ],
+Widget buildConversationCard(
+    context, User? currUser, Conversation currConversation, Member currSender) {
+  return Card(
+    child: ListTile(
+      leading: Text(currSender.username),
+      title: Text(currConversation.lastMessage.content),
     ),
-    body: Container(
-        child: Center(
-      child: Column(
-        children: [
-          Text("$currUser"),
-          MaterialButton(
-            onPressed: () async => await _auth.signOut(),
-            child: Text("Sign out"),
-          ),
-          MaterialButton(
-            onPressed: () async =>
-                DatabaseService().createUserInDatabase(currUser),
-            child: Text("create user"),
-          ),
-          MaterialButton(
-            onPressed: () async => createDummyMessage(),
-            child: Text("Create Message"),
-          ),
-        ],
-      ),
-    )),
   );
 }
 
