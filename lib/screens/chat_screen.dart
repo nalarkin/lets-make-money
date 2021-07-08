@@ -74,7 +74,6 @@ class _ChatScreenState extends State<ChatScreen> {
     print("CONVOID IS : $convoID");
     return Scaffold(
       appBar: myAppbar("$currReceiverUsername"),
-      backgroundColor: Theme.of(context).backgroundColor,
       body: Stack(
           // fit: StackFit.expand,
           // alignment: Alignment.topCenter,
@@ -279,7 +278,8 @@ class _ChatScreenState extends State<ChatScreen> {
                         maxLines: 5,
                         controller: myController,
                         decoration: InputDecoration.collapsed(
-                            fillColor: Theme.of(context).backgroundColor,
+                            fillColor:
+                                Theme.of(context).scaffoldBackgroundColor,
                             filled: true,
                             hintText: 'Type your message...',
                             border: OutlineInputBorder(

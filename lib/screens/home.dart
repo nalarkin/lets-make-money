@@ -113,7 +113,12 @@ Widget buildConversationCard(
   // }
 
   return Card(
+    // color: Theme.of(context).cardColor,
+    // color: Colors.black,
     child: ListTile(
+      // focusColor: Theme.of(context).cardColor,
+      // tileColor: Theme.of(context).cardColor,
+      tileColor: Theme.of(context).cardColor,
       onTap: () {
         Navigator.pushNamed(context, ChatScreen.routeName,
             arguments: ChatScreen(
