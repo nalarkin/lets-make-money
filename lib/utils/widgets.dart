@@ -198,7 +198,10 @@ Widget customDrawer(BuildContext context) {
 
 PreferredSizeWidget customAppBar(BuildContext context, String title) {
   return AppBar(
-    title: Text(title),
+    title: Text(
+      title,
+      key: const Key('appbar'),
+    ),
     centerTitle: true,
     actions: [
       IconButton(
