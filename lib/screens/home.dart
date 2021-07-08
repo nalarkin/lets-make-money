@@ -110,19 +110,72 @@ class BuildConversations extends StatefulWidget {
 }
 
 class _BuildConversationsState extends State<BuildConversations> {
+  // TODO: Add _bannerAd
+  late BannerAd _bannerAd;
+
+  // TODO: Add _isBannerAdReady
+  bool _isBannerAdReady = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // QuizManager.instance
+    //   ..listener = this
+    //   ..startGame();
+
+    // COMPLETE: Initialize _bannerAd
+    _bannerAd = BannerAd(
+      adUnitId: AdHelper.bannerAdUnitId,
+      request: AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          setState(() {
+            _isBannerAdReady = true;
+          });
+        },
+        onAdFailedToLoad: (ad, err) {
+          print('Failed to load a banner ad: ${err.message}');
+          _isBannerAdReady = false;
+          ad.dispose();
+        },
+      ),
+    );
+
+    _bannerAd.load();
+
+    // COMPLETE: Load a Rewarded Ad
+    // _loadRewardedAd();
+  }
+
   @override
   Widget build(BuildContext context) {
-    
     User? currUser = Provider.of<User?>(context);
     AuthService _auth = AuthService();
     List<Conversation> currConvos = Provider.of<List<Conversation>>(context);
     List<String> currSenders = Provider.of<List<String>>(context);
     Map<String, Member> memberMap =
         HelperFunctions.getMemberMap(Provider.of<List<Member>>(context));
-    return ListView.builder(
-      itemBuilder: (context, index) => buildConversationCard(
-          context, currUser, currConvos[index], currSenders[index], memberMap),
-      itemCount: currConvos.length,
+    return SafeArea(
+      child: Stack(
+        children: [
+          ListView.builder(
+            itemBuilder: (context, index) => buildConversationCard(context,
+                currUser, currConvos[index], currSenders[index], memberMap),
+            itemCount: currConvos.length,
+          ),
+          if (_isBannerAdReady)
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                width: _bannerAd.size.width.toDouble(),
+                height: _bannerAd.size.height.toDouble(),
+                child: AdWidget(ad: _bannerAd),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }
