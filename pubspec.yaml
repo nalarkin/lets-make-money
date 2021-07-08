@@ -34,6 +34,7 @@ dependencies:
   provider: ^5.0.0
   bubble: ^1.2.1
   intl: ^0.17.0
+  fake_cloud_firestore: ^1.1.2
 
 dev_dependencies:
   flutter_test:
