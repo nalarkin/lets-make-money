@@ -104,7 +104,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget buildMessageList() {
-    FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+    // FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
     DatabaseService db = Provider.of<DatabaseService>(context);
     return StreamBuilder<List<MessageCard>>(
       stream: FirebaseFirestore.instance
