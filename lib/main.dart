@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,8 @@ import 'package:lets_talk_money/services/database.dart';
 import 'package:lets_talk_money/utils/widgets.dart';
 
 import 'package:provider/provider.dart';
+
+const bool USE_FIRESTORE_EMULATOR = true;
 
 // import 'models/Member.dart';
 
@@ -54,6 +57,18 @@ class _AppToInitializeFirebaseState extends State<AppToInitializeFirebase> {
 
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
+          if (USE_FIRESTORE_EMULATOR) {
+            FirebaseFirestore.instance.settings = const Settings(
+                host: 'localhost:8080',
+                sslEnabled: false,
+                persistenceEnabled: false);
+            FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+
+            // FirebaseFirestore.instance.settings = const Settings(
+            //   host: 'localhost:8080',
+            //   persistenceEnabled: false,
+            // );
+          }
           return MyMaterialApp();
         }
 
@@ -130,7 +145,6 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
               Profile.routeName: (context) => Profile(),
               ExtractArgumentsScreen.routeName: (context) =>
                   ExtractArgumentsScreen(),
-
             }));
   }
 }

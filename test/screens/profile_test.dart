@@ -125,7 +125,7 @@ void main() {
           ),
         ],
         // child: MaterialApp(home: testAuth()),
-        child: MaterialApp(home: Profile(firestore)),
+        child: MaterialApp(home: Profile()),
         // child: Builder(
         //   builder: (context) => ,
         //   // builder: (_) => Profile(),

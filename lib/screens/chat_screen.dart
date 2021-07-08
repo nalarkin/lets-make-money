@@ -50,7 +50,7 @@ class _ChatScreenState extends State<ChatScreen> {
   String currSender;
   String currReceiverUsername;
   final ScrollController listScrollController = ScrollController();
-  final TextEditingController myController = TextEditingController();
+  TextEditingController myController = TextEditingController();
 
   // User? currSender;
   // Member? currReceiver;
@@ -104,6 +104,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget buildMessageList() {
+    FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
     DatabaseService db = Provider.of<DatabaseService>(context);
     return StreamBuilder<List<MessageCard>>(
       stream: FirebaseFirestore.instance
@@ -260,7 +261,7 @@ class _ChatScreenState extends State<ChatScreen> {
     List<String> convoIDs = convoID.split('_');
     String receiverID =
         (convoIDs[0] != currUser?.uid) ? convoIDs[0] : convoIDs[1];
-    DatabaseService _db = Provider.of<DatabaseService>(context);
+    DatabaseService _db = Provider.of<DatabaseService>(context, listen: false);
     return Container(
         color: Theme.of(context).scaffoldBackgroundColor,
         child: Padding(

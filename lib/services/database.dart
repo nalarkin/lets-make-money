@@ -10,6 +10,14 @@ import 'package:lets_talk_money/utils/helper.dart';
 
 class DatabaseService {
   final _firestoreInstance = FirebaseFirestore.instance;
+  
+
+  // final _firestoreInstance = FirebaseFirestore.instance;
+
+  // _firestoreInstance.settings = const Settings(
+  //             host: 'localhost:8080',
+  //             persistenceEnabled: false,
+  //           );
 
   DatabaseService();
 
@@ -43,6 +51,8 @@ class DatabaseService {
   // ];
 
   Future createUserInDatabase(User? currUser) async {
+    FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+
     print("inside database creation user is : $currUser");
     if (currUser != null) {
       _firestoreInstance
@@ -80,6 +90,7 @@ class DatabaseService {
   // }
 
   Stream<List<Member>> streamUsers() {
+    FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
     return _firestoreInstance.collection(USERS_COLLECTION).snapshots().map(
         (QuerySnapshot list) => list.docs
             .map((DocumentSnapshot snap) =>
@@ -90,6 +101,7 @@ class DatabaseService {
   // Stream get getMessages => _firestoreInstance.collection(MSG_COLLECTION).doc(convoID).collection(convoID).orderBy('timestamp', descending: true).limit(20).snapshots(),
 
   void updateMessageRead(DocumentSnapshot document, String convoID) {
+    FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
     final DocumentReference documentReference = FirebaseFirestore.instance
         .collection('messages')
         .doc(convoID)
@@ -103,6 +115,7 @@ class DatabaseService {
   // lastMessage adn users array are visible to this
   Stream<List<Conversation>> streamConversations(String uid) {
     try {
+      FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
       if (uid.isEmpty) {
         print("ERROR. streamConverations(String uid) UID IS EMPTY");
         throw (StackTrace.current);
@@ -131,6 +144,7 @@ class DatabaseService {
     print(convoList.toString());
     print(_senders.toString());
     List<Stream<String>> res = [];
+    FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
     for (String id in _senders) {
       res.add(_firestoreInstance
           .collection(USERS_COLLECTION)
@@ -157,10 +171,13 @@ class DatabaseService {
     return _senders;
   }
 
-  Stream<List<Member>> get streamMembers => _firestoreInstance
+  Stream<List<Member>> get streamMembers {
+    FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+    return _firestoreInstance
       .collection(USERS_COLLECTION)
       .snapshots()
       .map(convertUsersToMembers);
+  }
 
   List<Member> convertUsersToMembers(
       QuerySnapshot<Map<String, dynamic>> snapshot) {
@@ -190,6 +207,7 @@ class DatabaseService {
       String convoID =
           HelperFunctions.getConvoID(msgCardToAdd.idFrom, msgCardToAdd.idTo);
       Map<String, dynamic> messageInfo = msgCardToAdd.toMap();
+      FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
       await _firestoreInstance
           .collection(MSG_COLLECTION)
           .doc(convoID)
@@ -273,6 +291,7 @@ class DatabaseService {
   //     .map(convertToMessageList);
 
   Future updateUsername(String uid, String newUsername) async {
+    FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
     _firestoreInstance
         .collection(USERS_COLLECTION)
         .doc(uid)
