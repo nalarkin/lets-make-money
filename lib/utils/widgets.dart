@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lets_talk_money/screens/chat_screen.dart';
 import 'package:lets_talk_money/screens/home.dart';
 import 'package:lets_talk_money/screens/new_conversation.dart';
+import 'package:lets_talk_money/screens/profile.dart';
 import 'package:lets_talk_money/services/auth.dart';
 import 'package:lets_talk_money/styles/colors.dart';
 
@@ -67,19 +68,19 @@ class LoadingCircle extends StatelessWidget {
   }
 }
 
-PreferredSizeWidget myAppbar(String appBarTitle) {
-  return AppBar(
-    // backgroundColor: kPrimaryColor,
-    centerTitle: true,
-    title: Text(
-      appBarTitle,
-      // style: Theme.of(context)
-      //     .textTheme
-      //     .headline5
-      //     ?.copyWith(color: kOnPrimaryColor),
-    ),
-  );
-}
+// PreferredSizeWidget myAppbar(String appBarTitle) {
+//   return AppBar(
+//     // backgroundColor: kPrimaryColor,
+//     centerTitle: true,
+//     title: Text(
+//       appBarTitle,
+//       // style: Theme.of(context)
+//       //     .textTheme
+//       //     .headline5
+//       //     ?.copyWith(color: kOnPrimaryColor),
+//     ),
+//   );
+// }
 
 class StyledButton extends StatelessWidget {
   const StyledButton({required this.text, required this.onPressed});
@@ -162,6 +163,7 @@ Widget customDrawer(BuildContext context) {
               // color: kPrimaryColor,
             ),
             onTap: () {
+              Navigator.pushNamed(context, Profile.routeName);
               // Update the state of the app
               // ...
               // Then close the drawer

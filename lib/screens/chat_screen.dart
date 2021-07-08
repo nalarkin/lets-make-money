@@ -73,7 +73,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     print("CONVOID IS : $convoID");
     return Scaffold(
-      appBar: myAppbar("$currReceiverUsername"),
+      appBar: customAppBar(context, "$currReceiverUsername"),
       body: Stack(
           // fit: StackFit.expand,
           // alignment: Alignment.topCenter,

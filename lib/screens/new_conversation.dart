@@ -20,7 +20,7 @@ class NewConversation extends StatelessWidget {
     User? currUser = Provider.of<User?>(context);
 
     return Scaffold(
-      appBar: myAppbar("User Directory"),
+      appBar: customAppBar(context, "User Directory"),
       body: StreamBuilder<List<Member>>(
         stream: _db.streamMembers,
         builder: (BuildContext context, AsyncSnapshot<List<Member>> snapshot) {
