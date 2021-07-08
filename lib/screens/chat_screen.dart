@@ -68,6 +68,7 @@ class _ChatScreenState extends State<ChatScreen> {
     this.currSender = args.currSender;
     this.currReceiver = args.currReceiver;
     this.currReceiverUsername = args.currReceiverUsername;
+    TextEditingController myController = TextEditingController();
 
     print("CONVOID IS : $convoID");
     return Scaffold(
@@ -76,18 +77,23 @@ class _ChatScreenState extends State<ChatScreen> {
           // fit: StackFit.expand,
           // alignment: Alignment.topCenter,
           children: <Widget>[
-            Column(
-              // mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                // Flexible(
-                // child: buildMessageList(),
-                buildMessageList(),
-                // Expanded(
-                //   child: Container(),
-                // ),
-                // ),
-                // buildInput(context, myController),
-              ],
+            //   Column(
+            //     // mainAxisAlignment: MainAxisAlignment.start,
+            //     children: <Widget>[
+            // Flexible(
+            // child: buildMessageList(),
+            buildMessageList(),
+
+            // Expanded(
+            //   child: Container(),
+            // ),
+            // ),
+            // buildInput(context, myController),
+            //   ],
+            // ),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: buildInput(context, myController),
             )
           ]),
     );
@@ -129,6 +135,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget buildItem(context, MessageCard currCard) {
     User? currUser = Provider.of<User?>(context);
+
+    // User? currUser = Provider.of<User?>(context);
     String timePosted = DateFormat.yMd()
         .add_jm()
         .format(currCard.timestamp?.toDate().toLocal() ?? DateTime.now());
@@ -238,6 +246,62 @@ class _ChatScreenState extends State<ChatScreen> {
         ],
       );
     }
+  }
+
+  Widget buildInput(BuildContext context, TextEditingController myController) {
+    // Member newestMember = Provider.of<Member>(context);
+    User? currUser = Provider.of<User?>(context);
+    List<String> convoIDs = convoID.split('_');
+    String receiverID =
+        (convoIDs[0] != currUser?.uid) ? convoIDs[0] : convoIDs[1];
+    DatabaseService _db = Provider.of<DatabaseService>(context);
+    return Container(
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Row(
+            children: <Widget>[
+              Flexible(
+                child: Container(
+                  child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: TextField(
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            ?.copyWith(color: Colors.black),
+                        maxLines: 5,
+                        controller: myController,
+                        decoration: const InputDecoration.collapsed(
+                          hintText: 'Type your message...',
+                        ),
+                      )),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: IconButton(
+                  icon: Icon(Icons.send, size: 25),
+                  onPressed: () async {
+                    String msgContent = myController.text;
+                    myController.clear();
+                    MessageCard mc = MessageCard(
+                      idFrom: currUser?.uid ?? '',
+                      idTo: receiverID,
+                      read: false,
+                      content: msgContent,
+                      timestamp: Timestamp.now(),
+                    );
+                    await _db.createMessageInDatabase(mc);
+                    print("Added $mc to Firestore.");
+                    // myController.clear();
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+        width: double.infinity,
+        height: 100.0);
   }
 
   // Future sendMessage() {
