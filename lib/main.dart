@@ -69,7 +69,7 @@ class _AppToInitializeFirebaseState extends State<AppToInitializeFirebase> {
             //   persistenceEnabled: false,
             // );
           }
-          return MyMaterialApp();
+          return MyApp();
         }
 
         // Otherwise, show something whilst waiting for initialization to complete
@@ -131,7 +131,8 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
         child: MaterialApp(
             title: 'Nathan',
             theme: ThemeData(primarySwatch: Colors.blueGrey),
-            home: Welcome(),
+            // home: (_auth.currentUser == null) ? SignInUserFirstTime() : Home(),
+            home: Home(),
 
             // To navigate to another page enter type the command:
             // Navigator.pushNamed(context, <ClassWithRouteName>.routeName);
@@ -143,8 +144,33 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
               NewConversation.routeName: (context) => NewConversation(),
               ChatScreen.routeName: (context) => ChatScreen(),
               Profile.routeName: (context) => Profile(),
+              Profile.routeName: (context) => Profile(),
+              // SignInUserFirstTime.routeName: (context) => SignInUserFirstTime(),
               ExtractArgumentsScreen.routeName: (context) =>
                   ExtractArgumentsScreen(),
             }));
   }
 }
+
+// class SignInUserFirstTime extends StatelessWidget {
+//   const SignInUserFirstTime({Key? key}) : super(key: key);
+//   static const String routeName = '/first_time';
+//   @override
+//   Widget build(BuildContext context) {
+//     AuthService _auth = AuthService();
+//     return FutureBuilder(
+//       future: _auth.signInAnon(),
+//       initialData: null,
+//       builder: (BuildContext context, AsyncSnapshot snapshot) {
+//         if (snapshot.hasError) {
+//           print("SNAPSHOT ERROR: ${snapshot.error.toString()}");
+//           return LoadingCircle();
+//         } else if (snapshot.connectionState == ConnectionState.done) {
+//           Navigator.pushNamed(context, Home.routeName);
+//         } else {
+//           return LoadingCircle();
+//         }
+//       },
+//     );
+  // }
+// }

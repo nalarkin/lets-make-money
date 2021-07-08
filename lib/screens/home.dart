@@ -22,11 +22,13 @@ class Home extends StatelessWidget {
     // AuthService _auth = AuthService();
     // print(currUser);
 
-    return StreamProvider<List<Conversation>>.value(
-        initialData: [],
-        value: Provider.of<DatabaseService>(context)
-            .streamConversations(currUser?.uid ?? ''),
-        child: getUserList());
+    return (currUser == null)
+        ? LoadingCircle()
+        : StreamProvider<List<Conversation>>.value(
+            initialData: [],
+            value: Provider.of<DatabaseService>(context)
+                .streamConversations(currUser.uid),
+            child: getUserList());
   }
 }
 
