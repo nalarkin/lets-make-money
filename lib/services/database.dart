@@ -125,20 +125,21 @@ class DatabaseService {
     }
   }
 
-  Stream<List<Member>> convertConversationsToMembers(
+  Stream<List<String>> convertConversationsToMembers(
       User? currUser, List<Conversation> convoList) {
     List<String> _senders = grabMostRecentSender(currUser, convoList);
     print(convoList.toString());
     print(_senders.toString());
-    List<Stream<Member>> res = [];
+    List<Stream<String>> res = [];
     for (String id in _senders) {
       res.add(_firestoreInstance
           .collection(USERS_COLLECTION)
           .doc(id)
           .snapshots()
-          .map((event) => Member.fromMap(event.data())));
+          // .map((event) => Member.fromMap(event.data())));
+          .map((event) => (Member.fromMap(event.data())).username));
     }
-    return StreamZip<Member>(res).asBroadcastStream();
+    return StreamZip<String>(res).asBroadcastStream();
   }
 
   List<String> grabMostRecentSender(

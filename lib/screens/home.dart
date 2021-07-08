@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:lets_talk_money/models/conversation.dart';
 import 'package:lets_talk_money/models/member.dart';
 import 'package:lets_talk_money/models/message_card.dart';
+import 'package:lets_talk_money/screens/chat_screen.dart';
 import 'package:lets_talk_money/screens/new_conversation.dart';
 import 'package:lets_talk_money/services/auth.dart';
 import 'package:lets_talk_money/services/database.dart';
+import 'package:lets_talk_money/utils/helper.dart';
 import 'package:lets_talk_money/utils/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -37,7 +39,7 @@ class getUserList extends StatelessWidget {
     AuthService _auth = AuthService();
     List<Conversation> currConvos = Provider.of<List<Conversation>>(context);
     DatabaseService _db = Provider.of<DatabaseService>(context);
-    return StreamProvider<List<Member>>.value(
+    return StreamProvider<List<String>>.value(
         value: _db.convertConversationsToMembers(currUser, currConvos),
         initialData: [],
         child: HomePageConversations());
@@ -57,7 +59,8 @@ class _HomePageConversationsState extends State<HomePageConversations> {
     User? currUser = Provider.of<User?>(context);
     AuthService _auth = AuthService();
     List<Conversation> currConvos = Provider.of<List<Conversation>>(context);
-    List<Member> currSenders = Provider.of<List<Member>>(context);
+    List<String> currSenders = Provider.of<List<String>>(context);
+    Map<String, Member> memberMap = HelperFunctions.getMemberMap(Provider.of<List<Member>>(context));
     assert(currSenders.length == currConvos.length);
     print(currUser);
     print("CURRENT CONVOS: $currConvos");
@@ -80,7 +83,7 @@ class _HomePageConversationsState extends State<HomePageConversations> {
       // body: Text("$currConvos"),
       body: ListView.builder(
         itemBuilder: (context, index) => buildConversationCard(
-            context, currUser, currConvos[index], currSenders[index]),
+            context, currUser, currConvos[index], currSenders[index], memberMap),
         itemCount: currConvos.length,
       ),
     );
@@ -88,12 +91,22 @@ class _HomePageConversationsState extends State<HomePageConversations> {
 }
 
 Widget buildConversationCard(
-    context, User? currUser, Conversation currConversation, Member currSender) {
+  context, User? currUser, Conversation currConversation, String currSender, Map<String, Member> memberMap) {
+    String currReceiverUsername = memberMap[currConversation.users[1]]?.username ?? '';
+    if (currUser?.uid != currConversation.users[0]) {
+      currReceiverUsername = memberMap[currConversation.users[0]]?.username ?? '';
+    } 
+    // }
+  
   return Card(
-    
     child: ListTile(
-      onTap: ,
-      leading: Text(currSender.username),
+      onTap:  () {Navigator.pushNamed(context, ChatScreen.routeName,
+                  arguments: ChatScreen(
+                      convoID: currConversation.id,
+                      currReceiver: "REMOVE IF YOU SEE",
+                      currSender: currUser?.uid ?? '',
+                      currReceiverUsername: currReceiverUsername));},
+      leading: Text(currSender),
       title: Text(currConversation.lastMessage.content),
     ),
   );

@@ -16,7 +16,7 @@ class NewConversation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DatabaseService _db = Provider.of<DatabaseService>(context);
-    List<Member> currMembers = Provider.of<List<Member>>(context);
+    // List<String> currMembers = Provider.of<List<Member>>(context);
     User? currUser = Provider.of<User?>(context);
 
     return Scaffold(
@@ -66,8 +66,9 @@ Widget buildItem(context, Member currMember, User? currUser) {
               Navigator.pushNamed(context, ChatScreen.routeName,
                   arguments: ChatScreen(
                       convoID: generatedConvoID,
-                      currReceiver: currMember,
-                      currSender: currUser));
+                      currReceiver: currMember.id,
+                      currSender: currUser?.uid ?? '',
+                      currReceiverUsername: currMember.username));
             },
             title: Text(currMember.username,
                 style: Theme.of(context).textTheme.bodyText2?.copyWith(

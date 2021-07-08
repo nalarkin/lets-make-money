@@ -13,18 +13,28 @@ import 'package:provider/provider.dart';
 class ChatScreen extends StatefulWidget {
   static const String routeName = '/chat_screen';
   // const ChatScreen({ Key? key }) : super(key: key);
-  ChatScreen({this.convoID = '', this.currSender, this.currReceiver});
+  ChatScreen(
+      {this.convoID = '',
+      this.currSender = '',
+      this.currReceiver = '',
+      this.currReceiverUsername = ''});
   String convoID;
+  String currSender;
+  String currReceiver;
+  String currReceiverUsername;
   // late Member? currRecipient;
   // User? currUser;
   // String currSender;
-  User? currSender;
-  Member? currReceiver;
+  // User? currSender;
+  // Member? currReceiver;
   // String currReceiver;
 
   @override
   _ChatScreenState createState() => _ChatScreenState(
-      convoID: convoID, currSender: currSender, currReceiver: currReceiver);
+      convoID: convoID,
+      currSender: currSender,
+      currReceiver: currReceiver,
+      currReceiverUsername: currReceiverUsername);
 }
 
 class _ChatScreenState extends State<ChatScreen> {
@@ -33,11 +43,15 @@ class _ChatScreenState extends State<ChatScreen> {
   _ChatScreenState(
       {required this.convoID,
       required this.currReceiver,
-      required this.currSender});
+      required this.currSender,
+      required this.currReceiverUsername});
   String convoID;
-  
-  User? currSender;
-  Member? currReceiver;
+  String currReceiver;
+  String currSender;
+  String currReceiverUsername;
+
+  // User? currSender;
+  // Member? currReceiver;
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -53,10 +67,11 @@ class _ChatScreenState extends State<ChatScreen> {
     this.convoID = args.convoID;
     this.currSender = args.currSender;
     this.currReceiver = args.currReceiver;
+    this.currReceiverUsername = args.currReceiverUsername;
 
     print("CONVOID IS : $convoID");
     return Scaffold(
-      appBar: myAppbar("${currReceiver?.username}"),
+      appBar: myAppbar("$currReceiverUsername"),
       body: Stack(
           // fit: StackFit.expand,
           // alignment: Alignment.topCenter,
