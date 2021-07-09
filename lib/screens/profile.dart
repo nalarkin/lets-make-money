@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:lets_talk_money/screens/reset_username.dart';
 import 'package:lets_talk_money/utils/ad_helper.dart';
+import 'package:lets_talk_money/utils/platform.dart';
 import 'package:lets_talk_money/utils/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -15,6 +16,8 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  // PlatformFinder pf = PlatformFinder();
+  bool android = PlatformFinder().isAndroid;
   // TODO: Add _rewardedAd
   late RewardedAd _rewardedAd;
 
@@ -25,13 +28,18 @@ class _ProfileState extends State<Profile> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _loadRewardedAd();
+    if (android) {
+      _loadRewardedAd();
+    }
   }
 
   @override
   void dispose() {
     // TODO: Dispose a RewardedAd object
-    _rewardedAd.dispose();
+    if (android) {
+      _rewardedAd.dispose();
+    }
+
     super.dispose();
   }
 
