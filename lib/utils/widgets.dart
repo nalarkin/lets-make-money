@@ -127,76 +127,74 @@ Widget customDrawer(BuildContext context) {
       // through the options in the drawer if there isn't enough vertical
       // space to fit everything.
       key: const Key('drawer'),
-      
       child: ListView(
 
           // Important: Remove any padding from the ListView.
           padding: EdgeInsets.zero,
           children: <Widget>[
-        DrawerHeader(
-          decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-          child: Text(
-            'Quick Actions',
-            style: Theme.of(context)
-                .textTheme
-                .headline6
-                ?.copyWith(color: Theme.of(context).colorScheme.onBackground),
-          ),
-        ),
-        ListTile(
-          title: Text('Settings'),
-          leading: Icon(
-            Icons.settings,
-            // color: kPrimaryColor,
-          ),
-          onTap: () {
-            // Update the state of the app
-            // ...
-            // Then close the drawer
-            // Navigator.pop(context);
-            // Navigator.pushNamed(context, SettingsPage.routeName);
-          },
-        ),
-        ListTile(
-            title: Text('Profile', key: const Key('drawerProfileButton'),),
-            leading: Icon(
-              Icons.face,
-              // color: kPrimaryColor,
+            DrawerHeader(
+              decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+              child: Text(
+                'Quick Actions',
+                style: Theme.of(context).textTheme.headline6?.copyWith(
+                    color: Theme.of(context).colorScheme.onBackground),
+              ),
             ),
-            onTap: () {
-              Navigator.pushNamed(context, Profile.routeName);
-              // Update the state of the app
-              // ...
-              // Then close the drawer
-              // Navigator.pop(context);
-              // Navigator.pushNamed(context, Profile.routeName);
-            }),
-        ListTile(
-            title: Text('Home'),
-            leading: Icon(
-              Icons.home,
-              // color: kPrimaryColor,
+            ListTile(
+              title: Text('Settings'),
+              leading: Icon(
+                Icons.settings,
+                // color: kPrimaryColor,
+              ),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                // Navigator.pop(context);
+                // Navigator.pushNamed(context, SettingsPage.routeName);
+              },
             ),
-            onTap: () {
-              // Update the state of the app
-              // ...
-              // Then close the drawer
-              // Navigator.pop(context);
-              // Navigator.pushNamed(context, Home.routeName);
-            }),
-        ListTile(
-            title: Text('Logout'),
-            leading: Icon(
-              Icons.logout,
-              // color: kPrimaryColor,
-            ),
-            onTap: () {
-              // Navigator.of(context).pushNamedAndRemoveUntil(
-              //     Welcome.routeName, (Route<dynamic> route) => false);
-            }),
-            
-
-      ]));
+            ListTile(
+                title: Text(
+                  'Profile',
+                  key: const Key('drawerProfileButton'),
+                ),
+                leading: Icon(
+                  Icons.face,
+                  // color: kPrimaryColor,
+                ),
+                onTap: () {
+                  Navigator.pushNamed(context, Profile.routeName);
+                  // Update the state of the app
+                  // ...
+                  // Then close the drawer
+                  // Navigator.pop(context);
+                  // Navigator.pushNamed(context, Profile.routeName);
+                }),
+            ListTile(
+                title: Text('Home'),
+                leading: Icon(
+                  Icons.home,
+                  // color: kPrimaryColor,
+                ),
+                onTap: () {
+                  // Update the state of the app
+                  // ...
+                  // Then close the drawer
+                  // Navigator.pop(context);
+                  // Navigator.pushNamed(context, Home.routeName);
+                }),
+            ListTile(
+                title: Text('Logout'),
+                leading: Icon(
+                  Icons.logout,
+                  // color: kPrimaryColor,
+                ),
+                onTap: () {
+                  // Navigator.of(context).pushNamedAndRemoveUntil(
+                  //     Welcome.routeName, (Route<dynamic> route) => false);
+                }),
+          ]));
 }
 
 PreferredSizeWidget customAppBar(BuildContext context, String title) {
@@ -209,19 +207,28 @@ PreferredSizeWidget customAppBar(BuildContext context, String title) {
     actions: [
       IconButton(
           // onPressed: () => createNewConvo(context),
-          onPressed: () =>
-              Navigator.pushNamed(context, Profile.routeName),
+          onPressed: () => Navigator.pushNamed(context, Profile.routeName),
           icon: Icon(
             Icons.face,
             size: 30,
             key: const Key("profileButton"),
           )),
+      // IconButton(
+      //   onPressed: () => createDummyMessage(
+      //       "oYwXPIfUFjfDyABGIgXkzdzsYkr2", "O9uAX7fwujV63IVJeWGG84TPxjv1"),
+      //   icon: Icon(Icons.mail),
+      // ),
+      // IconButton(onPressed: AuthService().signOut, icon: Icon(Icons.logout)),
+
       IconButton(
-        onPressed: () => createDummyMessage(
-            "oYwXPIfUFjfDyABGIgXkzdzsYkr2", "O9uAX7fwujV63IVJeWGG84TPxjv1"),
-        icon: Icon(Icons.mail),
-      ),
-      IconButton(onPressed: AuthService().signOut, icon: Icon(Icons.logout)),
+          // onPressed: () => createNewConvo(context),
+          onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
+              Home.routeName, (Route<dynamic> route) => false),
+          icon: Icon(
+            Icons.home,
+            size: 30,
+            key: const Key("homeButton"),
+          )),
       IconButton(
           // onPressed: () => createNewConvo(context),
           onPressed: () =>
@@ -229,7 +236,8 @@ PreferredSizeWidget customAppBar(BuildContext context, String title) {
           icon: Icon(
             Icons.add,
             size: 30,
-          ))
+            key: const Key("addMessageButton"),
+          )),
     ],
   );
 }

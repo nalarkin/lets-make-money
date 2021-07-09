@@ -233,6 +233,7 @@ class _BuildConversationsState extends State<BuildConversations> {
     // convoCounter.add();
     return SafeArea(
       child: Stack(
+        key: ValueKey("stackKey"),
         children: [
           ListView.builder(
             itemBuilder: (context, index) => buildConversationCard(context,
@@ -241,7 +242,7 @@ class _BuildConversationsState extends State<BuildConversations> {
           ),
           if (_isBannerAdReady)
             Align(
-              alignment: Alignment.topCenter,
+              alignment: Alignment.bottomCenter,
               child: Container(
                 width: _bannerAd.size.width.toDouble(),
                 height: _bannerAd.size.height.toDouble(),
