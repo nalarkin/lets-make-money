@@ -20,10 +20,5 @@ class Welcome extends StatelessWidget {
     } else {
       return Home();
     }
-
-    //   currUser == null
-    //       ? Navigator.pushNamed(context, Debug.routeName)
-    //       : Navigator.pushNamed(context, Home.routeName);
-    // }
   }
 }

@@ -1,3 +1,5 @@
+// import 'dart:html';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -106,7 +108,10 @@ class _ProfileState extends State<Profile> {
                 Container(
                   alignment: Alignment.center,
                   margin: EdgeInsets.fromLTRB(10, 30, 10, 30),
-                  child: Text("${currUser?.displayName}"),
+                  child: Text(
+                    "${currUser?.displayName}",
+                    key: const ValueKey("profileUsername"),
+                  ),
                 )
 
                 //   ),
