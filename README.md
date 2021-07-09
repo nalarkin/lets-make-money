@@ -35,13 +35,13 @@ link to website: https://github.com/nalarkin/lets-make-money
 * download and copy the contents within the `/web/` folder. The most important are the contents of the `index.html`file.
 
 
-## Youtube Playlist of examples.
+## You-tube Playlist of examples.
 
 * https://youtube.com/playlist?list=PLpRmUT5wCbFkXV725sRB1u6JoOIZClfvV
 
 ## Areas of Improvement
 
-The organization and design principles could use some improvement. We could have reduced duplicated code by reusing a widget class for the buttons throughout the app. Another area of improvement would be to limit where we access the Member model. We use `Provider.of<Member>(context)` to access it, so limiting the areas we call for this value would lead to the app rebuilding a smaller portion of the widget tree, thus improving performance. 
+I would have found an alternative way to give the web version ads if I knew that admob was incompatible sooner. I also think I spent too much time on developing a new app, instead of just reusing the old one.
 
 ## Troubleshooting issues
 
