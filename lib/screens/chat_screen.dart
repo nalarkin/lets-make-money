@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
   static const String routeName = '/chat_screen';
-  // const ChatScreen({ Key? key }) : super(key: key);
+
   ChatScreen(
       {this.convoID = '',
       this.currSender = '',
@@ -24,12 +24,6 @@ class ChatScreen extends StatefulWidget {
   String currSender;
   String currReceiver;
   String currReceiverUsername;
-  // late Member? currRecipient;
-  // User? currUser;
-  // String currSender;
-  // User? currSender;
-  // Member? currReceiver;
-  // String currReceiver;
 
   @override
   _ChatScreenState createState() => _ChatScreenState(
@@ -40,8 +34,6 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  // final myController = TextEditingController();
-  // _ChatScreenState();
   _ChatScreenState(
       {required this.convoID,
       required this.currReceiver,
@@ -54,48 +46,8 @@ class _ChatScreenState extends State<ChatScreen> {
   final ScrollController listScrollController = ScrollController();
   TextEditingController myController = TextEditingController();
 
-  // // TODO: Add _interstitialAd
-  // InterstitialAd? _interstitialAd;
-
-  // // TODO: Add _isInterstitialAdReady
-  // bool _isInterstitialAdReady = false;
-
-  // // TODO: Implement _loadInterstitialAd()
-  // void _loadInterstitialAd() {
-  //   InterstitialAd.load(
-  //     adUnitId: AdHelper.interstitialAdUnitId,
-  //     request: AdRequest(),
-  //     adLoadCallback: InterstitialAdLoadCallback(
-  //       onAdLoaded: (ad) {
-  //         this._interstitialAd = ad;
-
-  //         ad.fullScreenContentCallback = FullScreenContentCallback(
-  //           onAdDismissedFullScreenContent: (ad) {
-  //             _moveToHome();
-  //           },
-  //         );
-
-  //         _isInterstitialAdReady = true;
-  //       },
-  //       onAdFailedToLoad: (err) {
-  //         print('Failed to load an interstitial ad: ${err.message}');
-  //         _isInterstitialAdReady = false;
-  //       },
-  //     ),
-  //   );
-  // }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _loadInterstitialAd();
-  // }
-
-  // User? currSender;
-  // Member? currReceiver;
   @override
   void dispose() {
-    // Clean up the controller when the widget is disposed.
     myController.dispose();
     super.dispose();
   }
@@ -113,37 +65,17 @@ class _ChatScreenState extends State<ChatScreen> {
     print("CONVOID IS : $convoID");
     return Scaffold(
       appBar: customAppBar(context, "$currReceiverUsername"),
-      body: Stack(
-          // fit: StackFit.expand,
-          // alignment: Alignment.topCenter,
-          children: <Widget>[
-            //   Column(
-            //     // mainAxisAlignment: MainAxisAlignment.start,
-            //     children: <Widget>[
-            // Flexible(
-            // child: buildMessageList(),
-            // Expanded(
-            //   child: buildMessageList(),
-            // ),
-            buildMessageList(),
-
-            // Expanded(
-            //   child: Container(),
-            // ),
-            // ),
-            // buildInput(context, myController),
-            //   ],
-            // ),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: buildInput(context, myController),
-            )
-          ]),
+      body: Stack(children: <Widget>[
+        buildMessageList(),
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: buildInput(context, myController),
+        )
+      ]),
     );
   }
 
   Widget buildMessageList() {
-    // FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
     DatabaseService db = Provider.of<DatabaseService>(context);
     return StreamBuilder<List<MessageCard>>(
       stream: FirebaseFirestore.instance
@@ -156,7 +88,6 @@ class _ChatScreenState extends State<ChatScreen> {
       builder:
           (BuildContext context, AsyncSnapshot<List<MessageCard>> snapshot) {
         if (snapshot.hasError) {
-          // print(snapshot.error);
           return Text('Something went wrong. Error ${snapshot.error}');
         }
 
@@ -166,11 +97,9 @@ class _ChatScreenState extends State<ChatScreen> {
         List<MessageCard>? _messageList = snapshot.data;
 
         return new ListView.builder(
-          // reverse: true,
           shrinkWrap: true,
           padding: EdgeInsets.all(10.0),
           itemCount: snapshot.data?.length,
-          // controller: listScrollController,
           itemBuilder: (context, index) =>
               buildItem(context, _messageList?[index] ?? MessageCard()),
         );
@@ -181,7 +110,6 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget buildItem(context, MessageCard currCard) {
     User? currUser = Provider.of<User?>(context);
 
-    // User? currUser = Provider.of<User?>(context);
     String timePosted = DateFormat.yMd()
         .add_jm()
         .format(currCard.timestamp?.toDate().toLocal() ?? DateTime.now());
@@ -193,27 +121,13 @@ class _ChatScreenState extends State<ChatScreen> {
             child: Container(
               margin: const EdgeInsets.symmetric(vertical: 5),
               child: Bubble(
-                  // color: kSelfMessageTileColor,
                   color: Theme.of(context).primaryColor.withOpacity(0.4),
                   elevation: 0,
                   padding: const BubbleEdges.fromLTRB(10, 4, 10, 4),
                   nip: BubbleNip.rightTop,
                   child: Column(
                     children: [
-                      Row(
-                          // children: [
-                          //   Text(
-                          //     "posted by: ${currCard.username}",
-                          //     style: Theme.of(context)
-                          //         .textTheme
-                          //         .overline
-                          //         ?.copyWith(color: kMessageUsernameAndDateColor),
-                          //   ),
-                          //   Expanded(
-                          //     child: Container(),
-                          //   ),
-                          // ],
-                          ),
+                      Row(),
                       Text(currCard.content,
                           style: Theme.of(context)
                               .textTheme
@@ -253,20 +167,6 @@ class _ChatScreenState extends State<ChatScreen> {
                   nip: BubbleNip.leftTop,
                   child: Column(
                     children: [
-                      // Row(
-                      //   children: [
-                      //     Text(
-                      //       "posted by: ${currCard.author}",
-                      //       style: Theme.of(context)
-                      //           .textTheme
-                      //           .overline
-                      //           ?.copyWith(color: kMessageUsernameAndDateColor),
-                      //     ),
-                      //     Expanded(
-                      //       child: Container(),
-                      //     ),
-                      //   ],
-                      // ),
                       Text(currCard.content,
                           style: Theme.of(context)
                               .textTheme
@@ -295,7 +195,6 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget buildInput(BuildContext context, TextEditingController myController) {
-    // Member newestMember = Provider.of<Member>(context);
     User? currUser = Provider.of<User?>(context);
     List<String> convoIDs = convoID.split('_');
     String receiverID =
@@ -321,12 +220,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         controller: myController,
                         decoration: InputDecoration.collapsed(
                           fillColor: Theme.of(context).scaffoldBackgroundColor,
-                          // filled: true,
                           hintText: 'Type your message...',
-                          // border: OutlineInputBorder(
-                          //   borderSide:
-                          //       BorderSide(color: Colors.black, width: 2.0),
-                          // )
                         ),
                       )),
                 ),
@@ -351,11 +245,8 @@ class _ChatScreenState extends State<ChatScreen> {
                       timestamp: Timestamp.now(),
                     );
                     await _db.createMessageInDatabase(mc);
-                    // listScrollController.animateTo(0.0,
-                    //     duration: Duration(milliseconds: 300),
-                    //     curve: Curves.easeOut);
+
                     print("Added $mc to Firestore.");
-                    // myController.clear();
                   },
                 ),
               ),
@@ -365,9 +256,4 @@ class _ChatScreenState extends State<ChatScreen> {
         width: double.infinity,
         height: 100.0);
   }
-
-  // Future sendMessage() {
-
-  // }
-
 }

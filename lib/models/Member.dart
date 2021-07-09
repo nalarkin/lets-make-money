@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class Member {
   String firstName;
@@ -44,12 +43,6 @@ class Member {
 
   @override
   String toString() {
-    // TODO: implement toString
     return "Member(id=$id , username=$username)";
   }
-
-  // @override
-  // String toString() {
-  //   return "Member($username, $firstName, $lastName, $id, $email, $connectedSocials, $role)";
-  // }
 }

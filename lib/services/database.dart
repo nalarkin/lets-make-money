@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:lets_talk_money/models/conversation.dart';
 import 'package:lets_talk_money/models/member.dart';
-import 'package:lets_talk_money/models/message.dart';
 import 'package:async/async.dart';
 import 'package:lets_talk_money/models/message_card.dart';
 import 'package:lets_talk_money/utils/helper.dart';
