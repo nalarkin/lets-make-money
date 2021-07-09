@@ -1,5 +1,3 @@
-
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -18,17 +16,14 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  
   bool android = PlatformFinder().isAndroid;
-  
+
   late RewardedAd _rewardedAd;
 
-  
   bool _isRewardedAdReady = false;
 
   @override
   void initState() {
-    
     super.initState();
     if (android) {
       _loadRewardedAd();
@@ -37,7 +32,6 @@ class _ProfileState extends State<Profile> {
 
   @override
   void dispose() {
-    
     if (android) {
       _rewardedAd.dispose();
     }
@@ -45,7 +39,6 @@ class _ProfileState extends State<Profile> {
     super.dispose();
   }
 
-  
   void _loadRewardedAd() {
     RewardedAd.load(
       adUnitId: AdHelper.rewardedAdUnitId,
@@ -81,30 +74,22 @@ class _ProfileState extends State<Profile> {
     User? currUser = Provider.of<User?>(context);
     return Scaffold(
       appBar: customAppBar(context, "Profile"),
-      drawer: customDrawer(context),
+      // drawer: customDrawer(context),
       body: Column(
         children: [
-          
-          
-          
           Card(
             margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
             child: Stack(
               alignment: Alignment.center,
               children: [
                 Container(
-                  
                   child: ListTile(
-                    
                     leading: Icon(
                       Icons.face,
                       size: 60,
                     ),
                   ),
                 ),
-                
-                
-                
                 Container(
                   alignment: Alignment.center,
                   margin: EdgeInsets.fromLTRB(10, 30, 10, 30),
@@ -113,21 +98,9 @@ class _ProfileState extends State<Profile> {
                     key: const ValueKey("profileUsername"),
                   ),
                 )
-
-                
-                
               ],
             ),
-            
-            
-            
-            
           ),
-          
-          
-          
-          
-          
         ],
       ),
       floatingActionButton: _buildFloatingActionButton(),
@@ -135,7 +108,6 @@ class _ProfileState extends State<Profile> {
   }
 
   Widget? _buildFloatingActionButton() {
-    
     return (_isRewardedAdReady)
         ? FloatingActionButton.extended(
             onPressed: () {
@@ -155,7 +127,6 @@ class _ProfileState extends State<Profile> {
                       TextButton(
                         child: Text('ok'.toUpperCase()),
                         onPressed: () {
-                          
                           _rewardedAd.show(onUserEarnedReward: (_, reward) {
                             Navigator.pushNamed(
                                 context, ResetUsername.routeName);
@@ -173,66 +144,3 @@ class _ProfileState extends State<Profile> {
         : null;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

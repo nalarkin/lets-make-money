@@ -91,7 +91,7 @@ class _HomePageConversationsState extends State<HomePageConversations> {
     print(currUser);
     print("CURRENT CONVOS: $currConvos");
     return Scaffold(
-      drawer: customDrawer(context),
+      // drawer: customDrawer(context),
       appBar: customAppBar(context, currUser?.displayName ?? ''),
       // body: Text("$currConvos"),
       body: FutureBuilder(
