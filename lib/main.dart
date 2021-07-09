@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:lets_talk_money/models/conversation.dart';
 import 'package:lets_talk_money/models/member.dart';
 import 'package:lets_talk_money/screens/chat_screen.dart';
 import 'package:lets_talk_money/screens/debug.dart';
@@ -104,13 +103,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyMaterialApp extends StatefulWidget {
-  // final User? currUser;
-  // final bool hasData;
-  // MyMaterialApp({required this.firebaseUser});
-  // MyMaterialApp(this.currUser, this.hasData);
-
   @override
-  // _MyMaterialAppState createState() => _MyMaterialAppState(currUser, hasData);
   _MyMaterialAppState createState() => _MyMaterialAppState();
 }
 
@@ -131,8 +124,9 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
           Provider<DatabaseService>(
             create: (_) => DatabaseService(),
           ),
-          ChangeNotifierProvider<ConvoCount>(create: (_) =>ConvoCount()),
-          ChangeNotifierProvider<PlatformFinder>(create: (_) => PlatformFinder()),
+          ChangeNotifierProvider<ConvoCount>(create: (_) => ConvoCount()),
+          ChangeNotifierProvider<PlatformFinder>(
+              create: (_) => PlatformFinder()),
         ],
         child: MaterialApp(
             title: 'Nathan',
@@ -156,31 +150,4 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
                   ExtractArgumentsScreen(),
             }));
   }
-}
-
-// class SignInUserFirstTime extends StatelessWidget {
-//   const SignInUserFirstTime({Key? key}) : super(key: key);
-//   static const String routeName = '/first_time';
-//   @override
-//   Widget build(BuildContext context) {
-//     AuthService _auth = AuthService();
-//     return FutureBuilder(
-//       future: _auth.signInAnon(),
-//       initialData: null,
-//       builder: (BuildContext context, AsyncSnapshot snapshot) {
-//         if (snapshot.hasError) {
-//           print("SNAPSHOT ERROR: ${snapshot.error.toString()}");
-//           return LoadingCircle();
-//         } else if (snapshot.connectionState == ConnectionState.done) {
-//           Navigator.pushNamed(context, Home.routeName);
-//         } else {
-//           return LoadingCircle();
-//         }
-//       },
-//     );
-  // }
-// }
-
-void getPlatform() {
-  
 }

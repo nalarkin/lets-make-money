@@ -5,11 +5,10 @@ class MessageCard {
   String content;
   String idFrom;
   String idTo;
-  // String convoID;
+
   bool read;
 
   MessageCard({
-    // this.convoID = '',
     this.idFrom = '',
     this.idTo = '',
     this.content = '',

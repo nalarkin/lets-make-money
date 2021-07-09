@@ -34,10 +34,10 @@ class _ResetUsernameState extends State<ResetUsername> {
                     child: Column(children: <Widget>[
                   SizedBox(height: 15.0),
                   TextFormField(
-                      // style: Theme.of(context)
-                      //     .textTheme
-                      //     .bodyText1
-                      //     ?.copyWith(color: kTextColor),
+                      
+                      
+                      
+                      
                       decoration:
                           textInputDecoration.copyWith(hintText: 'Username'),
                       validator: (val) {

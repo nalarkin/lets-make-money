@@ -1,3 +1,5 @@
+
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -16,17 +18,17 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  // PlatformFinder pf = PlatformFinder();
+  
   bool android = PlatformFinder().isAndroid;
-  // TODO: Add _rewardedAd
+  
   late RewardedAd _rewardedAd;
 
-  // TODO: Add _isRewardedAdReady
+  
   bool _isRewardedAdReady = false;
 
   @override
   void initState() {
-    // TODO: implement initState
+    
     super.initState();
     if (android) {
       _loadRewardedAd();
@@ -35,7 +37,7 @@ class _ProfileState extends State<Profile> {
 
   @override
   void dispose() {
-    // TODO: Dispose a RewardedAd object
+    
     if (android) {
       _rewardedAd.dispose();
     }
@@ -43,7 +45,7 @@ class _ProfileState extends State<Profile> {
     super.dispose();
   }
 
-  // TODO: Implement _loadRewardedAd()
+  
   void _loadRewardedAd() {
     RewardedAd.load(
       adUnitId: AdHelper.rewardedAdUnitId,
@@ -82,47 +84,50 @@ class _ProfileState extends State<Profile> {
       drawer: customDrawer(context),
       body: Column(
         children: [
-          // Padding(
-          //   padding: EdgeInsets.fromLTRB(10, 60, 10, 40),
-          // child:
+          
+          
+          
           Card(
             margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
             child: Stack(
               alignment: Alignment.center,
               children: [
                 Container(
-                  // color: Colors.blue,
+                  
                   child: ListTile(
-                    // minVerticalPadding: 30,
+                    
                     leading: Icon(
                       Icons.face,
                       size: 60,
                     ),
                   ),
                 ),
-                // Container(
-                // color: Colors.red,
-                // child:
+                
+                
+                
                 Container(
                   alignment: Alignment.center,
                   margin: EdgeInsets.fromLTRB(10, 30, 10, 30),
-                  child: Text("${currUser?.displayName}"),
+                  child: Text(
+                    "${currUser?.displayName}",
+                    key: const ValueKey("profileUsername"),
+                  ),
                 )
 
-                //   ),
-                //   Text("${currUser?.displayName}"),
+                
+                
               ],
             ),
-            //     ),
-            //     ),
-            //   ],
-            // ),
+            
+            
+            
+            
           ),
-          // StyledButton(
-          //     text: "Update username",
-          //     onPressed: () =>
-          //         ),
-          // // )
+          
+          
+          
+          
+          
         ],
       ),
       floatingActionButton: _buildFloatingActionButton(),
@@ -130,7 +135,7 @@ class _ProfileState extends State<Profile> {
   }
 
   Widget? _buildFloatingActionButton() {
-    // TODO: Return a FloatingActionButton if a Rewarded Ad is available
+    
     return (_isRewardedAdReady)
         ? FloatingActionButton.extended(
             onPressed: () {
@@ -150,7 +155,7 @@ class _ProfileState extends State<Profile> {
                       TextButton(
                         child: Text('ok'.toUpperCase()),
                         onPressed: () {
-                          // Navigator.pop(context);
+                          
                           _rewardedAd.show(onUserEarnedReward: (_, reward) {
                             Navigator.pushNamed(
                                 context, ResetUsername.routeName);
@@ -172,62 +177,62 @@ class _ProfileState extends State<Profile> {
 
 
 
-// class Profile extends StatefulWidget {
-//   const Profile({Key? key}) : super(key: key);
-//   static final String routeName = '/profile';
 
-//   @override
-//   _ProfileState createState() => _ProfileState();
-// }
 
-// class _ProfileState extends State<Profile> {
-//   @override
-//   Widget build(BuildContext context) {
-//     User? currUser = Provider.of<User?>(context);
-//     return Scaffold(
-//       appBar: customAppBar(context, "Profile"),
-//       drawer: customDrawer(context),
-//       body: Column(
-//         children: [
-//           // Padding(
-//           //   padding: EdgeInsets.fromLTRB(10, 60, 10, 40),
-//           // child:
-//           Card(
-//             margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
-//             child: Stack(
-//               alignment: Alignment.center,
-//               children: [
-//                 Container(
-//                   // color: Colors.blue,
-//                   child: ListTile(
-//                     // minVerticalPadding: 30,
-//                     leading: Icon(
-//                       Icons.face,
-//                       size: 60,
-//                     ),
-//                   ),
-//                 ),
-//                 // Container(
-//                 // color: Colors.red,
-//                 // child:
-//                 Container(
-//                   alignment: Alignment.center,
-//                   margin: EdgeInsets.fromLTRB(10, 30, 10, 30),
-//                   child: Text("${currUser?.displayName}"),
-//                 )
 
-//                 //   ),
-//                 //   Text("${currUser?.displayName}"),
-//               ],
-//             ),
-//             //     ),
-//             //     ),
-//             //   ],
-//             // ),
-//           ),
-//           // )
-//         ],
-//       ),
-//     );
-//   }
-// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
