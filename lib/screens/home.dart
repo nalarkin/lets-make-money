@@ -31,7 +31,7 @@ class Home extends StatelessWidget {
             initialData: [],
             value: Provider.of<DatabaseService>(context)
                 .streamConversations(currUser.uid),
-            child: getUserList());
+            child: GetUserList());
   }
 }
 
@@ -50,8 +50,8 @@ Future<InitializationStatus> _initGoogleMobileAds() {
   return MobileAds.instance.initialize();
 }
 
-class getUserList extends StatelessWidget {
-  const getUserList({Key? key}) : super(key: key);
+class GetUserList extends StatelessWidget {
+  const GetUserList({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -214,16 +214,16 @@ class _BuildConversationsState extends State<BuildConversations> {
 
   @override
   Widget build(BuildContext context) {
-    ConvoCount convoCounter = Provider.of<ConvoCount>(context);
+    // ConvoCount convoCounter = Provider.of<ConvoCount>(context);
     User? currUser = Provider.of<User?>(context);
     AuthService _auth = AuthService();
     List<Conversation> currConvos = Provider.of<List<Conversation>>(context);
     List<String> currSenders = Provider.of<List<String>>(context);
     Map<String, Member> memberMap =
         HelperFunctions.getMemberMap(Provider.of<List<Member>>(context));
-    bool _showAd = false;
-    print("currentCounter is ${convoCounter.count}");
-    print("_showAd is ${_showAd}");
+    // bool _showAd = false;
+    // print("currentCounter is ${convoCounter.count}");
+    // print("_showAd is ${_showAd}");
 
     // if (convoCounter.count > 2 && !_isInterstitialAdReady) {
     //   _loadInterstitialAd();
@@ -235,13 +235,8 @@ class _BuildConversationsState extends State<BuildConversations> {
       child: Stack(
         children: [
           ListView.builder(
-            itemBuilder: (context, index) => buildConversationCard(
-                context,
-                currUser,
-                currConvos[index],
-                currSenders[index],
-                memberMap,
-                convoCounter),
+            itemBuilder: (context, index) => buildConversationCard(context,
+                currUser, currConvos[index], currSenders[index], memberMap),
             itemCount: currConvos.length,
           ),
           if (_isBannerAdReady)
@@ -259,12 +254,13 @@ class _BuildConversationsState extends State<BuildConversations> {
   }
 
   Widget buildConversationCard(
-      context,
-      User? currUser,
-      Conversation currConversation,
-      String currSender,
-      Map<String, Member> memberMap,
-      ConvoCount convoCounter) {
+    context,
+    User? currUser,
+    Conversation currConversation,
+    String currSender,
+    Map<String, Member> memberMap,
+  ) {
+    // ConvoCount convoCounter) {
     String currReceiverUsername =
         memberMap[currConversation.users[1]]?.username ?? '';
     if (currUser?.uid != currConversation.users[0]) {
@@ -281,35 +277,19 @@ class _BuildConversationsState extends State<BuildConversations> {
         // tileColor: Theme.of(context).cardColor,
         tileColor: Theme.of(context).cardColor,
         onTap: () {
-          int currentCount = convoCounter.count;
-          print("current count inside the card you clicked!");
-          if (_isInterstitialAdReady) {
-            _interstitialAd?.show();
-            convoCounter.reset();
-          } else if (currentCount > 2 && !_isInterstitialAdReady) {
-            //  _interstitialAd?.show();
-            _loadInterstitialAd();
-          } else {
-            print("CONVO MANIP. BEFORE ADDING ${convoCounter.count}");
-            convoCounter.add();
-            print("CONVO MANIP. AFTER ADDING ${convoCounter.count}");
-          }
-          // int currentCount = currentCounter.count;
-          // currentCounter.add();
-          // print("convoSeen CURRENT VALUE IS $currentCount");
-          // if (convoSeen > 1 && !_isInterstitialAdReady) {
-          //   _loadInterstitialAd();
-          // } else if (_isBannerAdReady) {
-          //   setState(() {
-          //     convoSeen = 0;
-          //   });
+          // int currentCount = convoCounter.count;
+          // print("current count inside the card you clicked!");
+          // if (_isInterstitialAdReady) {
           //   _interstitialAd?.show();
+          //   convoCounter.reset();
+          // } else if (currentCount > 2 && !_isInterstitialAdReady) {
+          //   //  _interstitialAd?.show();
+          //   _loadInterstitialAd();
           // } else {
-          //   setState(() {
-          //     convoSeen = convoSeen + 1;
-          //   });
+          //   print("CONVO MANIP. BEFORE ADDING ${convoCounter.count}");
+          //   convoCounter.add();
+          //   print("CONVO MANIP. AFTER ADDING ${convoCounter.count}");
           // }
-
           Navigator.pushNamed(context, ChatScreen.routeName,
               arguments: ChatScreen(
                   convoID: currConversation.id,

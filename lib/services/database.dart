@@ -10,7 +10,6 @@ import 'package:lets_talk_money/utils/helper.dart';
 
 class DatabaseService {
   final _firestoreInstance = FirebaseFirestore.instance;
-  
 
   // final _firestoreInstance = FirebaseFirestore.instance;
 
@@ -174,9 +173,9 @@ class DatabaseService {
   Stream<List<Member>> get streamMembers {
     //FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
     return _firestoreInstance
-      .collection(USERS_COLLECTION)
-      .snapshots()
-      .map(convertUsersToMembers);
+        .collection(USERS_COLLECTION)
+        .snapshots()
+        .map(convertUsersToMembers);
   }
 
   List<Member> convertUsersToMembers(
@@ -290,14 +289,17 @@ class DatabaseService {
   //     .snapshots()
   //     .map(convertToMessageList);
 
-  Future updateUsername(String uid, String newUsername) async {
+  Future updateUsername(User? currUser, String newUsername) async {
     //FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+    String uid = currUser?.uid ?? 'Guest';
     _firestoreInstance
         .collection(USERS_COLLECTION)
         .doc(uid)
         .update({USER_USERNAME_FIELD: newUsername})
         .then((value) => print('Updated username to $newUsername.'))
         .catchError((error) => print('Failed to create user: $error'));
+    await currUser?.updateDisplayName(newUsername);
+    currUser?.reload();
   }
 
   // Stream<List<MessageCard>> get businessMessages => _firestoreInstance

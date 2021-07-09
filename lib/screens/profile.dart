@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lets_talk_money/screens/reset_username.dart';
 import 'package:lets_talk_money/utils/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -50,6 +51,10 @@ class Profile extends StatelessWidget {
             //   ],
             // ),
           ),
+          StyledButton(
+              text: "Update username",
+              onPressed: () =>
+                  Navigator.pushNamed(context, ResetUsername.routeName)),
           // )
         ],
       ),

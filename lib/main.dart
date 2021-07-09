@@ -9,6 +9,7 @@ import 'package:lets_talk_money/screens/debug.dart';
 import 'package:lets_talk_money/screens/home.dart';
 import 'package:lets_talk_money/screens/new_conversation.dart';
 import 'package:lets_talk_money/screens/profile.dart';
+import 'package:lets_talk_money/screens/reset_username.dart';
 import 'package:lets_talk_money/screens/welcome.dart';
 import 'package:lets_talk_money/services/auth.dart';
 import 'package:lets_talk_money/services/convo_counter.dart';
@@ -147,7 +148,7 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
               NewConversation.routeName: (context) => NewConversation(),
               ChatScreen.routeName: (context) => ChatScreen(),
               Profile.routeName: (context) => Profile(),
-              Profile.routeName: (context) => Profile(),
+              ResetUsername.routeName: (context) => ResetUsername(),
               // SignInUserFirstTime.routeName: (context) => SignInUserFirstTime(),
               ExtractArgumentsScreen.routeName: (context) =>
                   ExtractArgumentsScreen(),
