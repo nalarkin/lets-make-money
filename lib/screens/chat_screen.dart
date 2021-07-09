@@ -2,11 +2,13 @@ import 'package:bubble/bubble.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:lets_talk_money/models/member.dart';
 import 'package:lets_talk_money/models/message_card.dart';
 import 'package:lets_talk_money/services/database.dart';
 import 'package:lets_talk_money/styles/colors.dart';
+import 'package:lets_talk_money/utils/ad_helper.dart';
 import 'package:lets_talk_money/utils/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -51,6 +53,43 @@ class _ChatScreenState extends State<ChatScreen> {
   String currReceiverUsername;
   final ScrollController listScrollController = ScrollController();
   TextEditingController myController = TextEditingController();
+
+  // // TODO: Add _interstitialAd
+  // InterstitialAd? _interstitialAd;
+
+  // // TODO: Add _isInterstitialAdReady
+  // bool _isInterstitialAdReady = false;
+
+  // // TODO: Implement _loadInterstitialAd()
+  // void _loadInterstitialAd() {
+  //   InterstitialAd.load(
+  //     adUnitId: AdHelper.interstitialAdUnitId,
+  //     request: AdRequest(),
+  //     adLoadCallback: InterstitialAdLoadCallback(
+  //       onAdLoaded: (ad) {
+  //         this._interstitialAd = ad;
+
+  //         ad.fullScreenContentCallback = FullScreenContentCallback(
+  //           onAdDismissedFullScreenContent: (ad) {
+  //             _moveToHome();
+  //           },
+  //         );
+
+  //         _isInterstitialAdReady = true;
+  //       },
+  //       onAdFailedToLoad: (err) {
+  //         print('Failed to load an interstitial ad: ${err.message}');
+  //         _isInterstitialAdReady = false;
+  //       },
+  //     ),
+  //   );
+  // }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _loadInterstitialAd();
+  // }
 
   // User? currSender;
   // Member? currReceiver;

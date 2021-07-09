@@ -14,11 +14,12 @@ import 'package:lets_talk_money/screens/welcome.dart';
 import 'package:lets_talk_money/services/auth.dart';
 import 'package:lets_talk_money/services/convo_counter.dart';
 import 'package:lets_talk_money/services/database.dart';
+import 'package:lets_talk_money/utils/platform.dart';
 import 'package:lets_talk_money/utils/widgets.dart';
 
 import 'package:provider/provider.dart';
 
-const bool USE_FIRESTORE_EMULATOR = true;
+const bool USE_FIRESTORE_EMULATOR = false;
 
 // import 'models/Member.dart';
 
@@ -131,6 +132,7 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
             create: (_) => DatabaseService(),
           ),
           ChangeNotifierProvider<ConvoCount>(create: (_) =>ConvoCount()),
+          ChangeNotifierProvider<PlatformFinder>(create: (_) => PlatformFinder()),
         ],
         child: MaterialApp(
             title: 'Nathan',
@@ -178,3 +180,7 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
 //     );
   // }
 // }
+
+void getPlatform() {
+  
+}

@@ -94,5 +94,30 @@
       loadMainDartJs();
     }
   </script>
+
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
+
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+      https://firebase.google.com/docs/web/setup#available-libraries -->
+
+      <!-- Add Firebase products that you want to use -->
+  <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-firestore.js"></script>
+
+
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyArVI0_dh6PAPgv2SqcyClrBSmOiLkDt98",
+      authDomain: "nlarkin-lets-make-money.firebaseapp.com",
+      projectId: "nlarkin-lets-make-money",
+      storageBucket: "nlarkin-lets-make-money.appspot.com",
+      messagingSenderId: "914544076677",
+      appId: "1:914544076677:web:be1b5ea74b208c8e3c46ec"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
 </body>
 </html>

@@ -11,6 +11,7 @@ import 'package:lets_talk_money/services/auth.dart';
 import 'package:lets_talk_money/services/convo_counter.dart';
 import 'package:lets_talk_money/services/database.dart';
 import 'package:lets_talk_money/utils/helper.dart';
+import 'package:lets_talk_money/utils/platform.dart';
 import 'package:lets_talk_money/utils/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:lets_talk_money/utils/ad_helper.dart';
@@ -82,6 +83,7 @@ class _HomePageConversationsState extends State<HomePageConversations> {
     List<String> currSenders = Provider.of<List<String>>(context);
     Map<String, Member> memberMap =
         HelperFunctions.getMemberMap(Provider.of<List<Member>>(context));
+    bool android = Provider.of<PlatformFinder>(context).isAndroid;
     if (currSenders.length != currConvos.length) {
       return LoadingCircle();
     }
@@ -93,7 +95,8 @@ class _HomePageConversationsState extends State<HomePageConversations> {
       appBar: customAppBar(context, currUser?.displayName ?? ''),
       // body: Text("$currConvos"),
       body: FutureBuilder(
-        future: _initGoogleMobileAds(),
+        future:
+            android ? _initGoogleMobileAds() : Future.delayed(Duration.zero),
         // initialData: InitialData,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           return BuildConversations();
@@ -111,6 +114,7 @@ class BuildConversations extends StatefulWidget {
 }
 
 class _BuildConversationsState extends State<BuildConversations> {
+  PlatformFinder platformFinder = PlatformFinder();
   late BannerAd _bannerAd;
   int convoSeen = 0;
   bool _isBannerAdReady = false;
@@ -181,25 +185,26 @@ class _BuildConversationsState extends State<BuildConversations> {
     //   ..startGame();
 
     // COMPLETE: Initialize _bannerAd
-    _bannerAd = BannerAd(
-      adUnitId: AdHelper.bannerAdUnitId,
-      request: AdRequest(),
-      size: AdSize.banner,
-      listener: BannerAdListener(
-        onAdLoaded: (_) {
-          setState(() {
-            _isBannerAdReady = true;
-          });
-        },
-        onAdFailedToLoad: (ad, err) {
-          print('Failed to load a banner ad: ${err.message}');
-          _isBannerAdReady = false;
-          ad.dispose();
-        },
-      ),
-    );
-
-    _bannerAd.load();
+    if (platformFinder.isAndroid) {
+      _bannerAd = BannerAd(
+        adUnitId: AdHelper.bannerAdUnitId,
+        request: AdRequest(),
+        size: AdSize.banner,
+        listener: BannerAdListener(
+          onAdLoaded: (_) {
+            setState(() {
+              _isBannerAdReady = true;
+            });
+          },
+          onAdFailedToLoad: (ad, err) {
+            print('Failed to load a banner ad: ${err.message}');
+            _isBannerAdReady = false;
+            ad.dispose();
+          },
+        ),
+      );
+      _bannerAd.load();
+    }
 
     // COMPLETE: Load a Rewarded Ad
     // _loadRewardedAd();
@@ -207,7 +212,9 @@ class _BuildConversationsState extends State<BuildConversations> {
 
   @override
   void dispose() {
-    _interstitialAd?.dispose();
+    if (platformFinder.isAndroid) {
+      _interstitialAd?.dispose();
+    }
 
     super.dispose();
   }
