@@ -8,6 +8,7 @@ import 'package:lets_talk_money/models/message_card.dart';
 import 'package:lets_talk_money/screens/chat_screen.dart';
 import 'package:lets_talk_money/screens/new_conversation.dart';
 import 'package:lets_talk_money/services/auth.dart';
+import 'package:lets_talk_money/services/convo_counter.dart';
 import 'package:lets_talk_money/services/database.dart';
 import 'package:lets_talk_money/utils/helper.dart';
 import 'package:lets_talk_money/utils/widgets.dart';
@@ -110,11 +111,66 @@ class BuildConversations extends StatefulWidget {
 }
 
 class _BuildConversationsState extends State<BuildConversations> {
-  // TODO: Add _bannerAd
   late BannerAd _bannerAd;
-
-  // TODO: Add _isBannerAdReady
+  int convoSeen = 0;
   bool _isBannerAdReady = false;
+  // TODO: Add _interstitialAd
+  InterstitialAd? _interstitialAd;
+  // TODO: Add _isInterstitialAdReady
+  bool _isInterstitialAdReady = false;
+  // TODO: Implement _loadInterstitialAd()
+  void _loadInterstitialAd() {
+    //  convoID: currConversation.id,
+    //             currReceiver: "REMOVE IF YOU SEE",
+    //             currSender: currUser?.uid ?? '',
+    //             currReceiverUsername: currReceiverUsername
+    InterstitialAd.load(
+      adUnitId: AdHelper.interstitialAdUnitId,
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          this._interstitialAd = ad;
+
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (ad) {
+              // Navigator.pop(context);
+            },
+          );
+
+          _isInterstitialAdReady = true;
+        },
+        onAdFailedToLoad: (err) {
+          print('Failed to load an interstitial ad: ${err.message}');
+          _isInterstitialAdReady = false;
+        },
+      ),
+    );
+  }
+
+  // void onGameOver(int correctAnswers) {
+  //   showDialog(
+  //     context: _scaffoldKey.currentContext,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         title: Text('Game over!'),
+  //         content: Text('Score: $correctAnswers/5'),
+  //         actions: [
+  //           FlatButton(
+  //             child: Text('close'.toUpperCase()),
+  //             onPressed: () {
+  //               // TODO: Display an Interstitial Ad
+  //               if (_isInterstitialAdReady) {
+  //                 _interstitialAd?.show();
+  //               } else {
+  //                 _moveToHome();
+  //               }
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   @override
   void initState() {
@@ -150,13 +206,26 @@ class _BuildConversationsState extends State<BuildConversations> {
   }
 
   @override
+  void dispose() {
+    _interstitialAd?.dispose();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    ConvoCount convoCounter = Provider.of<ConvoCount>(context);
     User? currUser = Provider.of<User?>(context);
     AuthService _auth = AuthService();
     List<Conversation> currConvos = Provider.of<List<Conversation>>(context);
     List<String> currSenders = Provider.of<List<String>>(context);
     Map<String, Member> memberMap =
         HelperFunctions.getMemberMap(Provider.of<List<Member>>(context));
+    print("currentCounter is ${convoCounter.count}");
+    if (convoCounter.count > 2 && !_isInterstitialAdReady) {
+      _loadInterstitialAd();
+    }
+    convoCounter.add();
     return SafeArea(
       child: Stack(
         children: [
@@ -178,40 +247,57 @@ class _BuildConversationsState extends State<BuildConversations> {
       ),
     );
   }
-}
 
-Widget buildConversationCard(
-    context,
-    User? currUser,
-    Conversation currConversation,
-    String currSender,
-    Map<String, Member> memberMap) {
-  String currReceiverUsername =
-      memberMap[currConversation.users[1]]?.username ?? '';
-  if (currUser?.uid != currConversation.users[0]) {
-    currReceiverUsername = memberMap[currConversation.users[0]]?.username ?? '';
+  Widget buildConversationCard(
+      context,
+      User? currUser,
+      Conversation currConversation,
+      String currSender,
+      Map<String, Member> memberMap) {
+    String currReceiverUsername =
+        memberMap[currConversation.users[1]]?.username ?? '';
+    if (currUser?.uid != currConversation.users[0]) {
+      currReceiverUsername =
+          memberMap[currConversation.users[0]]?.username ?? '';
+    }
+    // }
+
+    return Card(
+      // color: Theme.of(context).cardColor,
+      // color: Colors.black,
+      child: ListTile(
+        // focusColor: Theme.of(context).cardColor,
+        // tileColor: Theme.of(context).cardColor,
+        tileColor: Theme.of(context).cardColor,
+        onTap: () {
+          // int currentCount = currentCounter.count;
+          // currentCounter.add();
+          // print("convoSeen CURRENT VALUE IS $currentCount");
+          // if (convoSeen > 1 && !_isInterstitialAdReady) {
+          //   _loadInterstitialAd();
+          // } else if (_isBannerAdReady) {
+          //   setState(() {
+          //     convoSeen = 0;
+          //   });
+          //   _interstitialAd?.show();
+          // } else {
+          //   setState(() {
+          //     convoSeen = convoSeen + 1;
+          //   });
+          // }
+
+          Navigator.pushNamed(context, ChatScreen.routeName,
+              arguments: ChatScreen(
+                  convoID: currConversation.id,
+                  currReceiver: "REMOVE IF YOU SEE",
+                  currSender: currUser?.uid ?? '',
+                  currReceiverUsername: currReceiverUsername));
+        },
+        leading: Text(currSender),
+        title: Text(currConversation.lastMessage.content),
+      ),
+    );
   }
-  // }
-
-  return Card(
-    // color: Theme.of(context).cardColor,
-    // color: Colors.black,
-    child: ListTile(
-      // focusColor: Theme.of(context).cardColor,
-      // tileColor: Theme.of(context).cardColor,
-      tileColor: Theme.of(context).cardColor,
-      onTap: () {
-        Navigator.pushNamed(context, ChatScreen.routeName,
-            arguments: ChatScreen(
-                convoID: currConversation.id,
-                currReceiver: "REMOVE IF YOU SEE",
-                currSender: currUser?.uid ?? '',
-                currReceiverUsername: currReceiverUsername));
-      },
-      leading: Text(currSender),
-      title: Text(currConversation.lastMessage.content),
-    ),
-  );
 }
 
 Future createDummyMessage(String senderID, String receiverID) async {
