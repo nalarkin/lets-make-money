@@ -221,17 +221,27 @@ class _BuildConversationsState extends State<BuildConversations> {
     List<String> currSenders = Provider.of<List<String>>(context);
     Map<String, Member> memberMap =
         HelperFunctions.getMemberMap(Provider.of<List<Member>>(context));
+    bool _showAd = false;
     print("currentCounter is ${convoCounter.count}");
-    if (convoCounter.count > 2 && !_isInterstitialAdReady) {
-      _loadInterstitialAd();
-    }
-    convoCounter.add();
+    print("_showAd is ${_showAd}");
+
+    // if (convoCounter.count > 2 && !_isInterstitialAdReady) {
+    //   _loadInterstitialAd();
+    //   // _showAd = true;
+    //   // convoCounter.reset();
+    // }
+    // convoCounter.add();
     return SafeArea(
       child: Stack(
         children: [
           ListView.builder(
-            itemBuilder: (context, index) => buildConversationCard(context,
-                currUser, currConvos[index], currSenders[index], memberMap),
+            itemBuilder: (context, index) => buildConversationCard(
+                context,
+                currUser,
+                currConvos[index],
+                currSenders[index],
+                memberMap,
+                convoCounter),
             itemCount: currConvos.length,
           ),
           if (_isBannerAdReady)
@@ -253,7 +263,8 @@ class _BuildConversationsState extends State<BuildConversations> {
       User? currUser,
       Conversation currConversation,
       String currSender,
-      Map<String, Member> memberMap) {
+      Map<String, Member> memberMap,
+      ConvoCount convoCounter) {
     String currReceiverUsername =
         memberMap[currConversation.users[1]]?.username ?? '';
     if (currUser?.uid != currConversation.users[0]) {
@@ -270,6 +281,19 @@ class _BuildConversationsState extends State<BuildConversations> {
         // tileColor: Theme.of(context).cardColor,
         tileColor: Theme.of(context).cardColor,
         onTap: () {
+          int currentCount = convoCounter.count;
+          print("current count inside the card you clicked!");
+          if (_isInterstitialAdReady) {
+            _interstitialAd?.show();
+            convoCounter.reset();
+          } else if (currentCount > 2 && !_isInterstitialAdReady) {
+            //  _interstitialAd?.show();
+            _loadInterstitialAd();
+          } else {
+            print("CONVO MANIP. BEFORE ADDING ${convoCounter.count}");
+            convoCounter.add();
+            print("CONVO MANIP. AFTER ADDING ${convoCounter.count}");
+          }
           // int currentCount = currentCounter.count;
           // currentCounter.add();
           // print("convoSeen CURRENT VALUE IS $currentCount");
