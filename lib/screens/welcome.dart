@@ -15,6 +15,7 @@ class Welcome extends StatelessWidget {
     User? currUser = Provider.of<User?>(context);
     print(currUser);
     if (currUser == null) {
+      _auth.signInAnon();
       return Debug();
     } else {
       return Home();

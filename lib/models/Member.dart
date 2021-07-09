@@ -42,6 +42,12 @@ class Member {
     }
   }
 
+  @override
+  String toString() {
+    // TODO: implement toString
+    return "Member(id=$id , username=$username)";
+  }
+
   // @override
   // String toString() {
   //   return "Member($username, $firstName, $lastName, $id, $email, $connectedSocials, $role)";

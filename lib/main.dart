@@ -1,13 +1,25 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:lets_talk_money/models/conversation.dart';
+import 'package:lets_talk_money/models/member.dart';
+import 'package:lets_talk_money/screens/chat_screen.dart';
 import 'package:lets_talk_money/screens/debug.dart';
 import 'package:lets_talk_money/screens/home.dart';
+import 'package:lets_talk_money/screens/new_conversation.dart';
+import 'package:lets_talk_money/screens/profile.dart';
+import 'package:lets_talk_money/screens/reset_username.dart';
 import 'package:lets_talk_money/screens/welcome.dart';
 import 'package:lets_talk_money/services/auth.dart';
+import 'package:lets_talk_money/services/convo_counter.dart';
+import 'package:lets_talk_money/services/database.dart';
+import 'package:lets_talk_money/utils/platform.dart';
 import 'package:lets_talk_money/utils/widgets.dart';
 
 import 'package:provider/provider.dart';
+
+const bool USE_FIRESTORE_EMULATOR = false;
 
 // import 'models/Member.dart';
 
@@ -49,7 +61,19 @@ class _AppToInitializeFirebaseState extends State<AppToInitializeFirebase> {
 
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
-          return MyMaterialApp();
+          if (USE_FIRESTORE_EMULATOR) {
+            FirebaseFirestore.instance.settings = const Settings(
+                host: 'localhost:8080',
+                sslEnabled: false,
+                persistenceEnabled: false);
+            FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+
+            // FirebaseFirestore.instance.settings = const Settings(
+            //   host: 'localhost:8080',
+            //   persistenceEnabled: false,
+            // );
+          }
+          return MyApp();
         }
 
         // Otherwise, show something whilst waiting for initialization to complete
@@ -100,11 +124,21 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
             value: _auth.currentUser,
             initialData: null,
           ),
+          StreamProvider<List<Member>>.value(
+            value: DatabaseService().streamMembers,
+            initialData: [],
+          ),
+          Provider<DatabaseService>(
+            create: (_) => DatabaseService(),
+          ),
+          ChangeNotifierProvider<ConvoCount>(create: (_) =>ConvoCount()),
+          ChangeNotifierProvider<PlatformFinder>(create: (_) => PlatformFinder()),
         ],
         child: MaterialApp(
             title: 'Nathan',
-            theme: ThemeData(primarySwatch: Colors.blue),
-            home: Welcome(),
+            theme: ThemeData(primarySwatch: Colors.blueGrey),
+            // home: (_auth.currentUser == null) ? SignInUserFirstTime() : Home(),
+            home: Home(),
 
             // To navigate to another page enter type the command:
             // Navigator.pushNamed(context, <ClassWithRouteName>.routeName);
@@ -113,6 +147,40 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
               Home.routeName: (context) => Home(),
               Debug.routeName: (context) => Debug(),
               Welcome.routeName: (context) => Welcome(),
+              NewConversation.routeName: (context) => NewConversation(),
+              ChatScreen.routeName: (context) => ChatScreen(),
+              Profile.routeName: (context) => Profile(),
+              ResetUsername.routeName: (context) => ResetUsername(),
+              // SignInUserFirstTime.routeName: (context) => SignInUserFirstTime(),
+              ExtractArgumentsScreen.routeName: (context) =>
+                  ExtractArgumentsScreen(),
             }));
   }
+}
+
+// class SignInUserFirstTime extends StatelessWidget {
+//   const SignInUserFirstTime({Key? key}) : super(key: key);
+//   static const String routeName = '/first_time';
+//   @override
+//   Widget build(BuildContext context) {
+//     AuthService _auth = AuthService();
+//     return FutureBuilder(
+//       future: _auth.signInAnon(),
+//       initialData: null,
+//       builder: (BuildContext context, AsyncSnapshot snapshot) {
+//         if (snapshot.hasError) {
+//           print("SNAPSHOT ERROR: ${snapshot.error.toString()}");
+//           return LoadingCircle();
+//         } else if (snapshot.connectionState == ConnectionState.done) {
+//           Navigator.pushNamed(context, Home.routeName);
+//         } else {
+//           return LoadingCircle();
+//         }
+//       },
+//     );
+  // }
+// }
+
+void getPlatform() {
+  
 }
