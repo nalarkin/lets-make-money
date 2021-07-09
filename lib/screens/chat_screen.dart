@@ -312,6 +312,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: TextField(
+                        key: const ValueKey("messageInputField"),
                         style: Theme.of(context)
                             .textTheme
                             .bodyText1
@@ -333,6 +334,7 @@ class _ChatScreenState extends State<ChatScreen> {
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: IconButton(
+                  key: ValueKey("sendMessageButton"),
                   icon: Icon(
                     Icons.send,
                     size: 25,
