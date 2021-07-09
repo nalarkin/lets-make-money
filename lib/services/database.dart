@@ -9,13 +9,6 @@ import 'package:lets_talk_money/utils/helper.dart';
 class DatabaseService {
   final _firestoreInstance = FirebaseFirestore.instance;
 
-  // final _firestoreInstance = FirebaseFirestore.instance;
-
-  // _firestoreInstance.settings = const Settings(
-  //             host: 'localhost:8080',
-  //             persistenceEnabled: false,
-  //           );
-
   DatabaseService();
 
   static const String USERS_COLLECTION = "users";
@@ -26,11 +19,6 @@ class DatabaseService {
   static const String USER_DATE_REGISTERED_FIELD = "dateRegistered";
   static const String USER_USERNAME_FIELD = "username";
 
-  // static const String ROOM_COLLECTION = 'allRooms';
-  // static const String GAMES_ROOM = 'gamesRoom';
-  // static const String BUSINESS_ROOM = 'businessRoom';
-  // static const String STUDY_ROOM = 'studyRoom';
-  // static const String HEALTH_ROOM = 'healthRoom';
   static const String MSG_COLLECTION = 'messages';
 
   static const String MSG_ID_FROM = 'idFrom';
@@ -40,16 +28,8 @@ class DatabaseService {
   static const String MSG_ID_TO = 'idTo';
   static const String MSG_TIMESTAMP = 'timestamp';
   static const String MSG_READ = 'read';
-  // static const List ALL_ROOMS = [
-  //   GAMES_ROOM,
-  //   BUSINESS_ROOM,
-  //   HEALTH_ROOM,
-  //   STUDY_ROOM
-  // ];
 
   Future createUserInDatabase(User? currUser) async {
-    // //FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
-
     print("inside database creation user is : $currUser");
     if (currUser != null) {
       _firestoreInstance
@@ -79,26 +59,15 @@ class DatabaseService {
     return _healthMessageList;
   }
 
-  // Stream<List<User>> streamUsers() {
-  //   return _firestoreInstance.collection(USERS_COLLECTION)
-  //   .snapshots().map((event) => null)
-
-  //   => list.docs.map((DocumentSnapshot snap) => Member.fromMap(snap.data()))).toList();
-  // }
-
   Stream<List<Member>> streamUsers() {
-    // //FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
     return _firestoreInstance.collection(USERS_COLLECTION).snapshots().map(
         (QuerySnapshot list) => list.docs
             .map((DocumentSnapshot snap) =>
                 Member.fromMap(snap.data() as Map<String, dynamic>))
             .toList());
-    // );
   }
-  // Stream get getMessages => _firestoreInstance.collection(MSG_COLLECTION).doc(convoID).collection(convoID).orderBy('timestamp', descending: true).limit(20).snapshots(),
 
   void updateMessageRead(DocumentSnapshot document, String convoID) {
-    // //FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
     final DocumentReference documentReference = FirebaseFirestore.instance
         .collection('messages')
         .doc(convoID)
@@ -108,11 +77,8 @@ class DatabaseService {
         .set(<String, dynamic>{'read': true}, SetOptions(merge: true));
   }
 
-  //  this represents message collection (not subcollection!)
-  // lastMessage adn users array are visible to this
   Stream<List<Conversation>> streamConversations(String uid) {
     try {
-      // //FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
       if (uid.isEmpty) {
         print("ERROR. streamConverations(String uid) UID IS EMPTY");
         throw (StackTrace.current);
@@ -141,13 +107,12 @@ class DatabaseService {
     print(convoList.toString());
     print(_senders.toString());
     List<Stream<String>> res = [];
-    // //FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+
     for (String id in _senders) {
       res.add(_firestoreInstance
           .collection(USERS_COLLECTION)
           .doc(id)
           .snapshots()
-          // .map((event) => Member.fromMap(event.data())));
           .map((event) => (Member.fromMap(event.data())).username));
     }
     return StreamZip<String>(res).asBroadcastStream();
@@ -169,7 +134,6 @@ class DatabaseService {
   }
 
   Stream<List<Member>> get streamMembers {
-    //FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
     return _firestoreInstance
         .collection(USERS_COLLECTION)
         .snapshots()
@@ -185,110 +149,30 @@ class DatabaseService {
     return _memberList;
   }
 
-  // Stream<List<Member>> getUsersByList(List<String> userIds) {
-  //   final List<Stream<Member>> streams = [];
-  //   for (String id in userIds) {
-  //     streams.add(_firestoreInstance
-  //         .collection('users')
-  //         .doc(id)
-  //         .snapshots()
-  //         .map((DocumentSnapshot<Map<String, dynamic>> snap) =>
-  //             Member.fromMap(snap.data())));
-  //   }
-  //   return StreamZip<Member>(streams).asBroadcastStream();
-  // }
-
   Future createMessageInDatabase(MessageCard msgCardToAdd) async {
     try {
-      // checks to make sure room collection exists
       String convoID =
           HelperFunctions.getConvoID(msgCardToAdd.idFrom, msgCardToAdd.idTo);
       Map<String, dynamic> messageInfo = msgCardToAdd.toMap();
-      //FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+
       await _firestoreInstance
           .collection(MSG_COLLECTION)
           .doc(convoID)
           .collection(convoID)
           .add(messageInfo);
-      //     .add({
-      //   MSG_CONTENT: msgCardToAdd.content,
-      //   MSG_ID_FROM: msgCardToAdd.idFrom,
-      //   MSG_ID_TO: msgCardToAdd.idTo,
-      //   MSG_READ: msgCardToAdd.read,
-      //   MSG_TIMESTAMP: msgCardToAdd.timestamp,
-      // });
+
       print("adding message to firestore");
       await _firestoreInstance.collection(MSG_COLLECTION).doc(convoID).set({
         MSG_LAST_MESSAGE: messageInfo,
         MSG_USER_ARRAY: [msgCardToAdd.idFrom, msgCardToAdd.idTo],
       });
       print("updated last message to $msgCardToAdd");
-      //     .set({
-      //   MSG_CONTENT: msgCardToAdd.content,
-      //   MSG_ID_FROM: msgCardToAdd.idFrom,
-      //   MSG_ID_TO: msgCardToAdd.idTo,
-      //   MSG_READ: msgCardToAdd.read,
-      //   MSG_TIMESTAMP: msgCardToAdd.timestamp,
-
-      // });
-      // }
     } catch (e) {
       print(e);
     }
   }
 
-  // Future<List<MessageCard>> getAllHealthMessages() async {
-  //   List<MessageCard> _messageList = [];
-  //   print("trying to gather messages...");
-  //   try {
-  //     _firestoreInstance
-  //         .collection(ROOM_COLLECTION)
-  //         .doc(HEALTH_ROOM)
-  //         .collection(MSG_COLLECTION)
-  //         .get()
-  //         .then((res) {
-  //       res.docs.forEach((element) {
-  //         // print(MessageCard.fromMap(element.data()));
-  //         _messageList.add(MessageCard.fromMap(element.data()));
-  //         print('list is now $_messageList');
-  //       });
-  //       return _messageList;
-  //     });
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  //   return _messageList;
-  // }
-
-  // List<MessageCard> convertToMessageList(
-  //     QuerySnapshot<Map<String, dynamic>> snapshot) {
-  //   List<MessageCard> _healthMessageList = [];
-  //   snapshot.docs.forEach((element) {
-  //     _healthMessageList.add(MessageCard.fromMap(element.data()));
-  //   });
-  //   return _healthMessageList;
-  // }
-
-  // Stream<List<MessageCard>> get healthMessages => _firestoreInstance
-  //     .collection(ROOM_COLLECTION)
-  //     .doc(HEALTH_ROOM)
-  //     .collection(MSG_COLLECTION)
-  //     .orderBy("date", descending: true)
-  //     // .limit(20)
-  //     .snapshots()
-  //     .map(convertToMessageList);
-
-  // Stream<List<MessageCard>> get gamesMessages => _firestoreInstance
-  //     .collection(ROOM_COLLECTION)
-  //     .doc(GAMES_ROOM)
-  //     .collection(MSG_COLLECTION)
-  //     .orderBy("date", descending: true)
-  //     // .limit(20)
-  //     .snapshots()
-  //     .map(convertToMessageList);
-
   Future updateUsername(User? currUser, String newUsername) async {
-    //FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
     String uid = currUser?.uid ?? 'Guest';
     _firestoreInstance
         .collection(USERS_COLLECTION)
@@ -299,38 +183,4 @@ class DatabaseService {
     await currUser?.updateDisplayName(newUsername);
     currUser?.reload();
   }
-
-  // Stream<List<MessageCard>> get businessMessages => _firestoreInstance
-  //     .collection(ROOM_COLLECTION)
-  //     .doc(BUSINESS_ROOM)
-  //     .collection(MSG_COLLECTION)
-  //     .orderBy("date", descending: true)
-  //     // .limit(20)
-  //     .snapshots()
-  //     .map(convertToMessageList);
-
-  // Stream<List<MessageCard>> get studyMessages => _firestoreInstance
-  //     .collection(ROOM_COLLECTION)
-  //     .doc(STUDY_ROOM)
-  //     .collection(MSG_COLLECTION)
-  //     .orderBy("date", descending: true)
-  //     // .limit(20)
-  //     .snapshots()
-  //     .map(convertToMessageList);
-
-  // Stream<Member?> getMember(User? currUser) {
-  //   return _firestoreInstance
-  //       .collection(USERS_COLLECTION)
-  //       .doc(currUser?.uid)
-  //       .snapshots()
-  //       .map((event) => Member.fromMap(event.data()));
-  // }
-
-  // Stream<Member?> currFirestoreMember(User? currUser) {
-  //   return _firestoreInstance
-  //       .collection(USERS_COLLECTION)
-  //       .doc(currUser?.uid)
-  //       .snapshots()
-  //       .map((event) => Member.fromMap(event.data()));
-  // }
 }
